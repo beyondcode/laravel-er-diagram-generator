@@ -3,22 +3,10 @@
 namespace BeyondCode\ErdGenerator;
 
 use ReflectionClass;
-use ReflectionMethod;
-use PhpParser\NodeTraverser;
-use PhpParser\ParserFactory;
-use PhpParser\Node\Stmt\Class_;
 use Illuminate\Console\Command;
 use phpDocumentor\GraphViz\Graph;
 use Illuminate\Support\Collection;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Database\Eloquent\Model;
-use PhpParser\NodeVisitor\NameResolver;
 use BeyondCode\ErdGenerator\Model as GraphModel;
-use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use Illuminate\Database\Eloquent\Relations\HasOneOrMany;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class GenerateDiagramCommand extends Command
 {
@@ -38,8 +26,11 @@ class GenerateDiagramCommand extends Command
      */
     protected $description = 'Generate ER diagram.';
 
-    /** @var Filesystem */
-    protected $filesystem;
+    /** @var ModelFinder */
+    protected $modelFinder;
+
+    /** @var RelationFinder */
+    protected $relationFinder;
 
     /** @var Graph */
     protected $graph;
@@ -47,11 +38,12 @@ class GenerateDiagramCommand extends Command
     /** @var GraphBuilder */
     protected $graphBuilder;
 
-    public function __construct(Filesystem $filesystem, GraphBuilder $graphBuilder)
+    public function __construct(ModelFinder $modelFinder, RelationFinder $relationFinder, GraphBuilder $graphBuilder)
     {
         parent::__construct();
 
-        $this->filesystem = $filesystem;
+        $this->relationFinder = $relationFinder;
+        $this->modelFinder = $modelFinder;
         $this->graphBuilder = $graphBuilder;
     }
 
@@ -69,7 +61,7 @@ class GenerateDiagramCommand extends Command
             return new GraphModel(
                 $model,
                 (new ReflectionClass($model))->getShortName(),
-                $this->getModelRelations($model)
+                $this->relationFinder->getModelRelations($model)
             );
         });
 
@@ -99,114 +91,8 @@ class GenerateDiagramCommand extends Command
     {
         return collect($directories)
             ->map(function ($directory) {
-                return $this->getModelInstancesInDirectory($directory)->all();
+                return $this->modelFinder->getModelsInDirectory($directory)->all();
             })
             ->flatten();
-    }
-
-    protected function getModelInstancesInDirectory(string $directory): Collection
-    {
-        return collect($this->filesystem->files($directory))->map(function ($path) {
-            return $this->getFullyQualifiedClassNameFromFile($path);
-        })->filter(function (string $className) {
-            return !empty($className);
-        })->filter(function (string $className) {
-            return is_subclass_of($className, Model::class);
-        });
-    }
-
-    protected function getFullyQualifiedClassNameFromFile(string $path): string
-    {
-        $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
-
-        $traverser = new NodeTraverser();
-        $traverser->addVisitor(new NameResolver());
-
-        $code = file_get_contents($path);
-
-        $statements = $parser->parse($code);
-
-        $statements = $traverser->traverse($statements);
-
-        return collect($statements[0]->stmts)
-                ->filter(function ($statement) {
-                    return $statement instanceof Class_;
-                })
-                ->map(function (Class_ $statement) {
-                    return $statement->namespacedName->toString();
-                })
-                ->first() ?? '';
-    }
-
-    protected function getModelRelations($model)
-    {
-        $class = new ReflectionClass($model);
-
-        $traitMethods = Collection::make($class->getTraits())->map(function ($trait) {
-            return Collection::make($trait->getMethods(ReflectionMethod::IS_PUBLIC));
-        })->flatten();
-
-        $methods = Collection::make($class->getMethods(ReflectionMethod::IS_PUBLIC))
-            ->merge($traitMethods)
-            ->reject(function (ReflectionMethod $method) use ($model) {
-                return $method->class !== $model;
-            })->reject(function (ReflectionMethod $method) use ($model) {
-                return $method->getNumberOfParameters() > 0;
-            });
-
-        $relations = Collection::make();
-
-        $methods->map(function (ReflectionMethod $method) use ($model, &$relations) {
-            $relations = $relations->merge($this->getRelationshipFromMethodAndModel($method, $model));
-        });
-
-        $relations = $relations->filter();
-
-        return $relations;
-    }
-
-    protected function getParentKey(string $qualifiedKeyName)
-    {
-        $segments = explode('.', $qualifiedKeyName);
-
-        return end($segments);
-    }
-
-    protected function getRelationshipFromMethodAndModel(ReflectionMethod $method, string $model)
-    {
-        try {
-            $return = $method->invoke(app($model));
-
-            if ($return instanceof Relation) {
-                $localKey = null;
-                $foreignKey = null;
-
-                if ($return instanceof HasOneOrMany) {
-                    $localKey = $this->getParentKey($return->getQualifiedParentKeyName());
-                    $foreignKey = $return->getForeignKeyName();
-                }
-
-                if ($return instanceof BelongsTo) {
-                    $foreignKey = $this->getParentKey($return->getQualifiedOwnerKeyName());
-                    $localKey = $return->getForeignKey();
-                }
-
-                if ($return instanceof BelongsToMany && ! $return instanceof MorphToMany) {
-                    $foreignKey = $this->getParentKey($return->getQualifiedOwnerKeyName());
-                    $localKey = $return->getForeignKey();
-                }
-
-                return [
-                    $method->getName() => new ModelRelation(
-                        $method->getShortName(),
-                        (new ReflectionClass($return))->getShortName(),
-                        (new ReflectionClass($return->getRelated()))->getName(),
-                        $localKey,
-                        $foreignKey
-                    )
-                ];
-            }
-        } catch (\Throwable $e) {}
-        return null;
     }
 }

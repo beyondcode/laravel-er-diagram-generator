@@ -4,6 +4,7 @@ namespace BeyondCode\ErdGenerator\Tests;
 
 use BeyondCode\ErdGenerator\GraphBuilder;
 use BeyondCode\ErdGenerator\ModelRelation;
+use BeyondCode\ErdGenerator\RelationFinder;
 use BeyondCode\ErdGenerator\Tests\Models\Post;
 use BeyondCode\ErdGenerator\Tests\Models\User;
 use BeyondCode\ErdGenerator\Tests\Models\Avatar;
@@ -15,11 +16,9 @@ class GetModelRelationsTest extends TestCase
     /** @test */
     public function it_can_find_model_relations()
     {
-        $method = self::getMethod(GenerateDiagramCommand::class, 'getModelRelations');
+        $finder = new RelationFinder();
 
-        $cmd = new GenerateDiagramCommand(app()->make('files'), new GraphBuilder());
-
-        $relations = $method->invokeArgs($cmd, [User::class]);
+        $relations = $finder->getModelRelations(User::class);
 
         $posts = $relations['posts'];
 
@@ -38,13 +37,5 @@ class GetModelRelationsTest extends TestCase
         $this->assertSame(Avatar::class, $avatar->getModel());
         $this->assertSame('id', $avatar->getLocalKey());
         $this->assertSame('user_id', $avatar->getForeignKey());
-    }
-
-    protected static function getMethod($class, $name)
-    {
-        $class = new \ReflectionClass($class);
-        $method = $class->getMethod($name);
-        $method->setAccessible(true);
-        return $method;
     }
 }
