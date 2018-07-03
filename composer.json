@@ -1,0 +1,59 @@
+{
+    "name": "beyondcode/laravel-er-diagram-generator",
+    "description": "Generate ER diagrams from your Laravel models.",
+    "keywords": [
+        "beyondcode",
+        "laravel-er-diagram-generator"
+    ],
+    "homepage": "https://github.com/beyondcode/laravel-er-diagram-generator",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Marcel Pociot",
+            "email": "marcel@beyondco.de",
+            "homepage": "https://beyondcode.de",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.1",
+        "doctrine/dbal": "~2.3",
+        "kalnoy/nestedset": "^4.3",
+        "phpdocumentor/graphviz": "^1.0",
+        "nikic/php-parser":"^2.0|^3.0|^4.0"
+    },
+    "require-dev": {
+        "larapack/dd": "^1.0",
+        "orchestra/testbench": "~3.0",
+        "phpunit/phpunit": "^7.0",
+        "spatie/phpunit-snapshot-assertions": "^1.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "BeyondCode\\ErdGenerator\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "BeyondCode\\ErdGenerator\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "BeyondCode\\ErdGenerator\\ErdGeneratorServiceProvider"
+            ],
+            "aliases": {
+                "ErdGenerator": "BeyondCode\\ErdGenerator\\ErdGeneratorFacade"
+            }
+        }
+    }
+}
