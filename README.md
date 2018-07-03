@@ -34,7 +34,7 @@ If you are using Laravel 5.5+, the package will automatically register the servi
 Once the package is installed, publish the configuration file using
 
 ```bash
-php artisan vendor:publish --proivder=BeyondCode\\ErdGenerator\\ErdGeneratorServiceProvider
+php artisan vendor:publish --provider=BeyondCode\\ErdGenerator\\ErdGeneratorServiceProvider
 ```
 
 Open the configuration file and add all folders, that contain your model files.
