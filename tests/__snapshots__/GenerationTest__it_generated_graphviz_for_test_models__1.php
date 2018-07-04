@@ -84,6 +84,14 @@ dir="both"
 arrowhead="tee"
 arrowtail="none"
 ]
+beyondcodeerdgeneratortestsmodelsuser -> beyondcodeerdgeneratortestsmodelscomment [
+label=" "
+xlabel="BelongsToMany
+comments"
+color="#003049"
+penwidth="1.8"
+fontname="Helvetica Neue"
+]
 "beyondcodeerdgeneratortestsmodelsavatar" [
 label=<<table width="100%" height="100%" border="0" margin="0" cellborder="1" cellspacing="0" cellpadding="10">
 <tr width="100%"><td width="100%" bgcolor="#d3d3d3"><font color="#333333">Avatar</font></td></tr>
