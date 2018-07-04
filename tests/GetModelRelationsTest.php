@@ -2,13 +2,12 @@
 
 namespace BeyondCode\ErdGenerator\Tests;
 
-use BeyondCode\ErdGenerator\GraphBuilder;
 use BeyondCode\ErdGenerator\ModelRelation;
 use BeyondCode\ErdGenerator\RelationFinder;
 use BeyondCode\ErdGenerator\Tests\Models\Post;
 use BeyondCode\ErdGenerator\Tests\Models\User;
 use BeyondCode\ErdGenerator\Tests\Models\Avatar;
-use BeyondCode\ErdGenerator\GenerateDiagramCommand;
+use BeyondCode\ErdGenerator\Tests\Models\Comment;
 
 class GetModelRelationsTest extends TestCase
 {
@@ -19,6 +18,8 @@ class GetModelRelationsTest extends TestCase
         $finder = new RelationFinder();
 
         $relations = $finder->getModelRelations(User::class);
+
+        $this->assertCount(3, $relations);
 
         $posts = $relations['posts'];
 
@@ -37,5 +38,14 @@ class GetModelRelationsTest extends TestCase
         $this->assertSame(Avatar::class, $avatar->getModel());
         $this->assertSame('id', $avatar->getLocalKey());
         $this->assertSame('user_id', $avatar->getForeignKey());
+
+        $avatar = $relations['comments'];
+
+        $this->assertInstanceOf(ModelRelation::class, $avatar);
+        $this->assertSame('comments', $avatar->getName());
+        $this->assertSame('BelongsToMany', $avatar->getType());
+        $this->assertSame(Comment::class, $avatar->getModel());
+        $this->assertSame(null, $avatar->getLocalKey());
+        $this->assertSame(null, $avatar->getForeignKey());
     }
 }

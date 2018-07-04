@@ -72,11 +72,6 @@ class RelationFinder
                     $localKey = $return->getForeignKey();
                 }
 
-                if ($return instanceof BelongsToMany && ! $return instanceof MorphToMany) {
-                    $foreignKey = $this->getParentKey($return->getQualifiedOwnerKeyName());
-                    $localKey = $return->getForeignKey();
-                }
-
                 return [
                     $method->getName() => new ModelRelation(
                         $method->getShortName(),

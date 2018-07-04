@@ -22,4 +22,9 @@ class User extends Model
         return $this->hasOne(Avatar::class);
     }
 
+    public function comments()
+    {
+        return $this->belongsToMany(Comment::class);
+    }
+
 }
