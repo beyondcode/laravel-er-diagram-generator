@@ -52,7 +52,7 @@ class GenerateDiagramCommand extends Command
         $models = $this->getModelsThatShouldBeInspected();
 
         $this->info("Found {$models->count()} models.");
-        $this->info("Inspecing model relations.");
+        $this->info("Inspecting model relations.");
 
         $bar = $this->output->createProgressBar($models->count());
 
