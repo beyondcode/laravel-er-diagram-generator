@@ -1,5 +1,5 @@
 <?php return 'Found 4 models.
-Inspecing model relations.
+Inspecting model relations.
 
  1/4 [▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░░░░]  25%
  2/4 [▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░]  50%
