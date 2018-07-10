@@ -19,6 +19,12 @@ You can install Graphviz on MacOS via homebrew:
 brew install graphviz
 ```
 
+Or, if you are using Homestead:
+
+```bash
+sudo apt-get install graphviz
+```
+
 ## Installation
 
 You can install the package via composer:
