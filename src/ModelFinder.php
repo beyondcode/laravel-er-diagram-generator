@@ -5,6 +5,7 @@ namespace BeyondCode\ErdGenerator;
 use PhpParser\NodeTraverser;
 use PhpParser\ParserFactory;
 use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\Namespace_;
 use Illuminate\Support\Collection;
 use Illuminate\Filesystem\Filesystem;
 use PhpParser\NodeVisitor\NameResolver;
@@ -42,10 +43,14 @@ class ModelFinder
         $code = file_get_contents($path);
 
         $statements = $parser->parse($code);
-
         $statements = $traverser->traverse($statements);
+        
+        // get the first namespace declaration in the file
+        $root_statement = collect($statements)->filter(function ($statement) {
+            return $statement instanceof Namespace_;
+        })->first();
 
-        return collect($statements[0]->stmts)
+        return collect($root_statement->stmts)
                 ->filter(function ($statement) {
                     return $statement instanceof Class_;
                 })
