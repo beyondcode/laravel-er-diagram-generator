@@ -22,9 +22,13 @@ class ModelFinder
         $this->filesystem = $filesystem;
     }
 
-    public function getModelsInDirectory(string $directory): Collection
+    public function getModelsInDirectory(string $directory, bool $recursive = false): Collection
     {
-        return Collection::make($this->filesystem->files($directory))->map(function ($path) {
+        $files = $recursive ?
+            $this->filesystem->allFiles($directory) :
+            $this->filesystem->files($directory);
+
+        return Collection::make($files)->map(function ($path) {
             return $this->getFullyQualifiedClassNameFromFile($path);
         })->filter(function (string $className) {
             return !empty($className);
@@ -44,7 +48,7 @@ class ModelFinder
 
         $statements = $parser->parse($code);
         $statements = $traverser->traverse($statements);
-        
+
         // get the first namespace declaration in the file
         $root_statement = collect($statements)->filter(function ($statement) {
             return $statement instanceof Namespace_;
@@ -59,5 +63,5 @@ class ModelFinder
                 })
                 ->first() ?? '';
     }
-    
+
 }

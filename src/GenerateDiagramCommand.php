@@ -82,7 +82,9 @@ class GenerateDiagramCommand extends Command
     {
         $directories = config('erd-generator.directories');
 
-        $modelsFromDirectories = $this->getAllModelsFromEachDirectory($directories);
+        $modelsFromDirectories = empty($directories) ?
+            $this->modelFinder->getModelsInDirectory(app_path(), true) :
+            $this->getAllModelsFromEachDirectory($directories);
 
         return $modelsFromDirectories;
     }
