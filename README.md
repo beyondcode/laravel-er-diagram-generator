@@ -5,7 +5,7 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/beyondcode/laravel-er-diagram-generator.svg?style=flat-square)](https://scrutinizer-ci.com/g/beyondcode/laravel-er-diagram-generator)
 [![Total Downloads](https://img.shields.io/packagist/dt/beyondcode/laravel-er-diagram-generator.svg?style=flat-square)](https://packagist.org/packages/beyondcode/laravel-er-diagram-generator)
 
-This package lets you generate entity relation diagrams by inspecting the relationships defined in your model files. 
+This package lets you generate entity relation diagrams by inspecting the relationships defined in your model files.
 It is highly customizable.
 Behind the scenes, it uses [GraphViz](https://www.graphviz.org) to generate the graph.
 
@@ -37,13 +37,11 @@ If you are using Laravel 5.5+, the package will automatically register the servi
 
 ## Usage
 
-Once the package is installed, publish the configuration file using
+By default, the package will automatically detect all models in your `app` directory that extend the Eloquent Model class. If you would like you explicitly define where your models are located, you can publish the configuration file using the following command.
 
 ```bash
 php artisan vendor:publish --provider=BeyondCode\\ErdGenerator\\ErdGeneratorServiceProvider
 ```
-
-Open the configuration file and add all folders, that contain your model files.
 
 ## Generating Diagrams
 
@@ -51,15 +49,15 @@ You can generate entity relation diagrams using the provided artisan command:
 
 ```bash
 php artisan generate:erd
-``` 
+```
 
-This will generate a file called `graph.png`. 
+This will generate a file called `graph.png`.
 
 You can also specify a custom filename:
 
 ```bash
 php artisan generate:erd output.png
-``` 
+```
 
 Or use one of the other [output formats](https://www.graphviz.org/doc/info/output.html), like SVG:
 
@@ -71,7 +69,7 @@ php artisan generate:erd output.svg --format=svg
 
 Please take a look at the published `erd-generator.php` configuration file for all available customization options.
 
-## Examples 
+## Examples
 
 Here are some examples taken from the [Laravel.io](https://laravel.io) codebase.
 

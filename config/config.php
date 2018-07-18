@@ -4,12 +4,18 @@ return [
 
     /*
      * All models in these directories will be scanned for ER diagram generation.
-     * The directories will not be scanned recursively, so be sure to add all
-     * directories that contain your models.
+     * By default, the `app` directory will be scanned recursively for models.
      */
     'directories' => [
-        // app_path('models'),
+        app_path(),
     ],
+
+    /*
+     * If true, all directories specified will be scanned recursively for models.
+     * Set this to false if you prefer to explicitly define each directory that should
+     * be scanned for models.
+     */
+    'recursive' => true,
 
     /*
      * The generator will automatically try to look up the model specific columns
