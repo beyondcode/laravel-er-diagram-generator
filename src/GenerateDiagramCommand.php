@@ -12,12 +12,14 @@ class GenerateDiagramCommand extends Command
 {
     const FORMAT_TEXT = 'text';
 
+    const DEFAULT_FILENAME = 'graph';
+
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $signature = 'generate:erd {filename=graph.png} {--format=png}';
+    protected $signature = 'generate:erd {filename?} {--format=png}';
 
     /**
      * The console command description.
@@ -72,10 +74,16 @@ class GenerateDiagramCommand extends Command
             return;
         }
 
-        $graph->export($this->option('format'), $this->argument('filename'));
+        $graph->export($this->option('format'), $this->getOutputFileName());
 
         $this->info(PHP_EOL);
-        $this->info('Wrote diagram to '.$this->argument('filename'));
+        $this->info('Wrote diagram to ' . $this->getOutputFileName());
+    }
+
+    protected function getOutputFileName(): string
+    {
+        return $this->argument('filename') ?:
+            static::DEFAULT_FILENAME . '.' . $this->option('format');
     }
 
     protected function getModelsThatShouldBeInspected(): Collection
