@@ -22,9 +22,9 @@ class ModelFinder
         $this->filesystem = $filesystem;
     }
 
-    public function getModelsInDirectory(string $directory, bool $recursive = false): Collection
+    public function getModelsInDirectory(string $directory): Collection
     {
-        $files = $recursive ?
+        $files = config('erd-generator.recursive') ?
             $this->filesystem->allFiles($directory) :
             $this->filesystem->files($directory);
 
