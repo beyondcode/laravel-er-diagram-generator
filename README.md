@@ -35,12 +35,25 @@ composer require beyondcode/laravel-er-diagram-generator --dev
 
 If you are using Laravel 5.5+, the package will automatically register the service provider for you.
 
+If you are using Lumen, you will need to add the following to `bootstrap\app.php`:
+
+```php
+\\ Register Service Providers
+$app->register(BeyondCode\ErdGenerator\ErdGeneratorServiceProvider::class);
+```
+
 ## Usage
 
 By default, the package will automatically detect all models in your `app` directory that extend the Eloquent Model class. If you would like you explicitly define where your models are located, you can publish the configuration file using the following command.
 
 ```bash
 php artisan vendor:publish --provider=BeyondCode\\ErdGenerator\\ErdGeneratorServiceProvider
+```
+
+If you're using Lumen and you want to customize the config, you'll need to copy the config file from the vendor directory:
+
+```bash
+cp ./vendor/beyondcode/laravel-er-diagram-generator/config/config.php config/erd-generator.php
 ```
 
 ## Generating Diagrams
