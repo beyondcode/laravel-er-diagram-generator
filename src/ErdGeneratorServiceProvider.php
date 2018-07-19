@@ -13,7 +13,7 @@ class ErdGeneratorServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/config.php' => config_path('erd-generator.php'),
+                __DIR__.'/../config/config.php' => base_path('config/erd-generator.php'),
             ], 'config');
         }
     }

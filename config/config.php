@@ -7,7 +7,7 @@ return [
      * By default, the `app` directory will be scanned recursively for models.
      */
     'directories' => [
-        app_path(),
+        base_path('app'),
     ],
 
     /*
