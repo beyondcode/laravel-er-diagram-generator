@@ -9,6 +9,10 @@ This package lets you generate entity relation diagrams by inspecting the relati
 It is highly customizable.
 Behind the scenes, it uses [GraphViz](https://www.graphviz.org) to generate the graph.
 
+## Prerequisites
+
+The minimum required PHP version is 7.1.0.
+
 ## Requirements
 
 This package requires the `graphviz` tool.
