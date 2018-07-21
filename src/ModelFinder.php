@@ -57,6 +57,10 @@ class ModelFinder
             return $statement instanceof Namespace_;
         })->first();
 
+        if (! $root_statement) {
+            return '';
+        }
+
         return collect($root_statement->stmts)
                 ->filter(function ($statement) {
                     return $statement instanceof Class_;
@@ -66,5 +70,4 @@ class ModelFinder
                 })
                 ->first() ?? '';
     }
-
 }
