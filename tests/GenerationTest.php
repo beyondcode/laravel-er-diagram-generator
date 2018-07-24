@@ -46,4 +46,16 @@ class GenerationTest extends TestCase
 
         $this->assertMatchesSnapshot(Artisan::output());
     }
+
+    /** @test */
+    public function it_generated_graphviz_in_jpeg_format()
+    {
+        $this->app['config']->set('erd-generator.directories', [__DIR__.'/Models']);
+
+        Artisan::call('generate:erd', [
+            '--format' => 'jpeg'
+        ]);
+
+        $this->assertContains('Wrote diagram to graph.jpeg', Artisan::output());
+    }
 }
