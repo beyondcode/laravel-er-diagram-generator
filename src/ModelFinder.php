@@ -34,9 +34,7 @@ class ModelFinder
         })->map(function ($path) {
             return $this->getFullyQualifiedClassNameFromFile($path);
         })->filter(function (string $className) {
-            return !empty($className);
-        })->filter(function (string $className) {
-            return is_subclass_of($className, EloquentModel::class);
+            return !empty($className) && is_subclass_of($className, EloquentModel::class);
         });
     }
 
@@ -53,9 +51,9 @@ class ModelFinder
         $statements = $traverser->traverse($statements);
 
         // get the first namespace declaration in the file
-        $root_statement = collect($statements)->filter(function ($statement) {
+        $root_statement = collect($statements)->first(function ($statement) {
             return $statement instanceof Namespace_;
-        })->first();
+        });
 
         if (! $root_statement) {
             return '';
