@@ -2,15 +2,15 @@
 
 namespace BeyondCode\ErdGenerator;
 
-use Illuminate\Support\Str;
-use PhpParser\NodeTraverser;
-use PhpParser\ParserFactory;
-use PhpParser\Node\Stmt\Class_;
-use Illuminate\Support\Collection;
-use PhpParser\Node\Stmt\Namespace_;
-use Illuminate\Filesystem\Filesystem;
-use PhpParser\NodeVisitor\NameResolver;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
+use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\Namespace_;
+use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitor\NameResolver;
+use PhpParser\ParserFactory;
 
 class ModelFinder
 {
@@ -29,13 +29,15 @@ class ModelFinder
             $this->filesystem->allFiles($directory) :
             $this->filesystem->files($directory);
 
+        $ignoreModels = array_filter(config('erd-generator.ignore', []), 'is_string');
+
         return Collection::make($files)->filter(function ($path) {
             return Str::endsWith($path, '.php');
         })->map(function ($path) {
             return $this->getFullyQualifiedClassNameFromFile($path);
         })->filter(function (string $className) {
             return !empty($className) && is_subclass_of($className, EloquentModel::class);
-        });
+        })->diff($ignoreModels);
     }
 
     protected function getFullyQualifiedClassNameFromFile(string $path): string
