@@ -29,6 +29,8 @@ Or, if you are using Homestead:
 sudo apt-get install graphviz
 ```
 
+To install Graphviz on Windows, download it from the [official website](https://graphviz.gitlab.io/_pages/Download/Download_windows.html).
+
 ## Installation
 
 You can install the package via composer:
