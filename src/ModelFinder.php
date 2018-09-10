@@ -11,6 +11,7 @@ use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\ParserFactory;
+use ReflectionClass;
 
 class ModelFinder
 {
@@ -36,7 +37,9 @@ class ModelFinder
         })->map(function ($path) {
             return $this->getFullyQualifiedClassNameFromFile($path);
         })->filter(function (string $className) {
-            return !empty($className) && is_subclass_of($className, EloquentModel::class);
+            return !empty($className)
+                && is_subclass_of($className, EloquentModel::class)
+                && ! (new ReflectionClass($className))->isAbstract();
         })->diff($ignoreModels);
     }
 
