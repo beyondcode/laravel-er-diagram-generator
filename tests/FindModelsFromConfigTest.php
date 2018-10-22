@@ -2,10 +2,11 @@
 
 namespace BeyondCode\ErdGenerator\Tests;
 
-use BeyondCode\ErdGenerator\GraphBuilder;
 use BeyondCode\ErdGenerator\ModelFinder;
-use BeyondCode\ErdGenerator\Tests\Models\Avatar;
-use BeyondCode\ErdGenerator\GenerateDiagramCommand;
+use BeyondCode\ErdGenerator\Tests\Models\Comment;
+use BeyondCode\ErdGenerator\Tests\Models\Post;
+use BeyondCode\ErdGenerator\Tests\Models\User;
+use BeyondCode\ErdGenerator\Tests\Models\User_Avatar;
 
 class FindModelsFromConfigTest extends TestCase
 {
@@ -18,6 +19,10 @@ class FindModelsFromConfigTest extends TestCase
         $classNames = $finder->getModelsInDirectory("./tests/Models");
 
         $this->assertCount(4, $classNames);
-        $this->assertSame(Avatar::class, $classNames->first());
+
+        $this->assertSame(
+            [Comment::class, Post::class, User::class, User_Avatar::class],
+            $classNames->values()->all()
+        );
     }
 }

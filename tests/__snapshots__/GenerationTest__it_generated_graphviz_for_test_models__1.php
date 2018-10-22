@@ -18,17 +18,6 @@ pad="0.5"
 ranksep="2"
 esep="1"
 fontname="Helvetica Neue"
-beyondcodeerdgeneratortestsmodelsavatar:user_id -> beyondcodeerdgeneratortestsmodelsuser:id [
-label=" "
-xlabel="BelongsTo
-user"
-color="#F77F00"
-penwidth="1.8"
-fontname="Helvetica Neue"
-dir="both"
-arrowhead="tee"
-arrowtail="crow"
-]
 beyondcodeerdgeneratortestsmodelscomment:user_id -> beyondcodeerdgeneratortestsmodelsuser:id [
 label=" "
 xlabel="BelongsTo
@@ -73,7 +62,7 @@ dir="both"
 arrowhead="crow"
 arrowtail="none"
 ]
-beyondcodeerdgeneratortestsmodelsuser:id -> beyondcodeerdgeneratortestsmodelsavatar:user_id [
+beyondcodeerdgeneratortestsmodelsuser:id -> beyondcodeerdgeneratortestsmodelsuser-avatar:user_id [
 label=" "
 xlabel="HasOne
 avatar"
@@ -92,13 +81,16 @@ color="#003049"
 penwidth="1.8"
 fontname="Helvetica Neue"
 ]
-"beyondcodeerdgeneratortestsmodelsavatar" [
-label=<<table width="100%" height="100%" border="0" margin="0" cellborder="1" cellspacing="0" cellpadding="10">
-<tr width="100%"><td width="100%" bgcolor="#d3d3d3"><font color="#333333">Avatar</font></td></tr>
-</table>>
-margin="0"
-shape="rectangle"
+beyondcodeerdgeneratortestsmodelsuser-avatar:user_id -> beyondcodeerdgeneratortestsmodelsuser:id [
+label=" "
+xlabel="BelongsTo
+user"
+color="#F77F00"
+penwidth="1.8"
 fontname="Helvetica Neue"
+dir="both"
+arrowhead="tee"
+arrowtail="crow"
 ]
 "beyondcodeerdgeneratortestsmodelscomment" [
 label=<<table width="100%" height="100%" border="0" margin="0" cellborder="1" cellspacing="0" cellpadding="10">
@@ -119,6 +111,14 @@ fontname="Helvetica Neue"
 "beyondcodeerdgeneratortestsmodelsuser" [
 label=<<table width="100%" height="100%" border="0" margin="0" cellborder="1" cellspacing="0" cellpadding="10">
 <tr width="100%"><td width="100%" bgcolor="#d3d3d3"><font color="#333333">User</font></td></tr>
+</table>>
+margin="0"
+shape="rectangle"
+fontname="Helvetica Neue"
+]
+"beyondcodeerdgeneratortestsmodelsuser-avatar" [
+label=<<table width="100%" height="100%" border="0" margin="0" cellborder="1" cellspacing="0" cellpadding="10">
+<tr width="100%"><td width="100%" bgcolor="#d3d3d3"><font color="#333333">User_Avatar</font></td></tr>
 </table>>
 margin="0"
 shape="rectangle"
