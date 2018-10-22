@@ -2,12 +2,12 @@
 
 namespace BeyondCode\ErdGenerator;
 
-use ReflectionClass;
-use ReflectionMethod;
-use Illuminate\Support\Collection;
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOneOrMany;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Collection;
+use ReflectionClass;
+use ReflectionMethod;
 
 class RelationFinder
 {
@@ -39,6 +39,11 @@ class RelationFinder
         });
 
         $relations = $relations->filter();
+
+        if ($ignoreRelations = array_get(config('erd-generator.ignore', []),$model))
+        {
+            $relations = $relations->diffKeys(array_flip($ignoreRelations));
+        }
 
         return $relations;
     }

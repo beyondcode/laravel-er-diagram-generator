@@ -49,4 +49,22 @@ class GetModelRelationsTest extends TestCase
         $this->assertSame(null, $avatar->getLocalKey());
         $this->assertSame(null, $avatar->getForeignKey());
     }
+
+    /** @test */
+    public function it_will_ignore_a_relation_if_it_is_excluded_on_config()
+    {
+        $this->app['config']->set('erd-generator.ignore', [
+            User::class => [
+                'posts'
+            ]
+        ]);
+
+        $finder = new RelationFinder();
+
+        $relations = $finder->getModelRelations(User::class);
+
+        $this->assertCount(2, $relations);
+        $this->assertNull(array_get($relations, 'posts'));
+    }
+
 }

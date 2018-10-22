@@ -11,6 +11,20 @@ return [
     ],
 
     /*
+     * If you want to ignore complete models or certain relations of a specific model,
+     * you can specify them here.
+     * To ignore a model completely, just add the fully qualified classname.
+     * To ignore only a certain relation of a model, enter the classname as the key
+     * and an array of relation names to ignore.
+     */
+    'ignore' => [
+        // User::class,
+        // Post::class => [
+        //     'user'
+        // ]
+    ],
+    
+    /*
      * If true, all directories specified will be scanned recursively for models.
      * Set this to false if you prefer to explicitly define each directory that should
      * be scanned for models.

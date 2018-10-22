@@ -16,12 +16,33 @@ class FindModelsFromConfigTest extends TestCase
     {
         $finder = new ModelFinder(app()->make('files'));
 
-        $classNames = $finder->getModelsInDirectory("./tests/Models");
+        $classNames = $finder->getModelsInDirectory(__DIR__ . "/Models");
 
         $this->assertCount(4, $classNames);
 
         $this->assertSame(
             [Comment::class, Post::class, User::class, User_Avatar::class],
+            $classNames->values()->all()
+        );
+    }
+
+    /** @test */
+    public function it_will_ignore_a_model_if_it_is_excluded_on_config()
+    {
+        $this->app['config']->set('erd-generator.ignore', [
+            Avatar::class,
+            User::class => [
+                'posts'
+            ]
+        ]);
+
+        $finder = new ModelFinder(app()->make('files'));
+
+        $classNames = $finder->getModelsInDirectory(__DIR__ . "/Models");
+
+        $this->assertCount(3, $classNames);
+        $this->assertEquals(
+            [Comment::class, Post::class, User::class],
             $classNames->values()->all()
         );
     }
