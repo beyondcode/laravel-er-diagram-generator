@@ -19,7 +19,7 @@ class User extends Model
 
     public function avatar()
     {
-        return $this->hasOne(Avatar::class);
+        return $this->hasOne(User_Avatar::class);
     }
 
     public function comments()
