@@ -42,7 +42,7 @@ class Model
     }
 
     /**
-     * @return ModelRelation[]
+     * @return Collection
      */
     public function getRelations()
     {
