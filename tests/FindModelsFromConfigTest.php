@@ -30,7 +30,7 @@ class FindModelsFromConfigTest extends TestCase
     public function it_will_ignore_a_model_if_it_is_excluded_on_config()
     {
         $this->app['config']->set('erd-generator.ignore', [
-            Avatar::class,
+            User_Avatar::class,
             User::class => [
                 'posts'
             ]
