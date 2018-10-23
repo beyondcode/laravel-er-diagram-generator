@@ -62,17 +62,6 @@ dir="both"
 arrowhead="crow"
 arrowtail="none"
 ]
-beyondcodeerdgeneratortestsmodelsuser:id -> beyondcodeerdgeneratortestsmodelsuser-avatar:user_id [
-label=" "
-xlabel="HasOne
-avatar"
-color="#D62828"
-penwidth="1.8"
-fontname="Helvetica Neue"
-dir="both"
-arrowhead="tee"
-arrowtail="none"
-]
 beyondcodeerdgeneratortestsmodelsuser -> beyondcodeerdgeneratortestsmodelscomment [
 label=" "
 xlabel="BelongsToMany
@@ -81,7 +70,7 @@ color="#003049"
 penwidth="1.8"
 fontname="Helvetica Neue"
 ]
-beyondcodeerdgeneratortestsmodelsuser-avatar:user_id -> beyondcodeerdgeneratortestsmodelsuser:id [
+beyondcodeerdgeneratortestsmodelsuseravatar:user_id -> beyondcodeerdgeneratortestsmodelsuser:id [
 label=" "
 xlabel="BelongsTo
 user"
@@ -133,7 +122,7 @@ margin="0"
 shape="rectangle"
 fontname="Helvetica Neue"
 ]
-"beyondcodeerdgeneratortestsmodelsuser-avatar" [
+"beyondcodeerdgeneratortestsmodelsuseravatar" [
 label=<<table width="100%" height="100%" border="0" margin="0" cellborder="1" cellspacing="0" cellpadding="10">
 <tr width="100%"><td width="100%" bgcolor="#d3d3d3"><font color="#333333">User_Avatar</font></td></tr>
 </table>>
