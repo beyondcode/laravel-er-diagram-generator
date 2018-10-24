@@ -3,10 +3,10 @@
 namespace BeyondCode\ErdGenerator\Tests;
 
 use BeyondCode\ErdGenerator\ModelFinder;
+use BeyondCode\ErdGenerator\Tests\Models\Avatar;
 use BeyondCode\ErdGenerator\Tests\Models\Comment;
 use BeyondCode\ErdGenerator\Tests\Models\Post;
 use BeyondCode\ErdGenerator\Tests\Models\User;
-use BeyondCode\ErdGenerator\Tests\Models\User_Avatar;
 
 class FindModelsFromConfigTest extends TestCase
 {
@@ -21,7 +21,7 @@ class FindModelsFromConfigTest extends TestCase
         $this->assertCount(4, $classNames);
 
         $this->assertSame(
-            [Comment::class, Post::class, User::class, User_Avatar::class],
+            [Avatar::class, Comment::class, Post::class, User::class],
             $classNames->values()->all()
         );
     }
@@ -30,7 +30,7 @@ class FindModelsFromConfigTest extends TestCase
     public function it_will_ignore_a_model_if_it_is_excluded_on_config()
     {
         $this->app['config']->set('erd-generator.ignore', [
-            User_Avatar::class,
+            Avatar::class,
             User::class => [
                 'posts'
             ]

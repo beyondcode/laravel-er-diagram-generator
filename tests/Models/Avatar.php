@@ -4,7 +4,7 @@ namespace BeyondCode\ErdGenerator\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class User_Avatar extends Model
+class Avatar extends Model
 {
 
     public function user()

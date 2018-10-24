@@ -4,10 +4,10 @@ namespace BeyondCode\ErdGenerator\Tests;
 
 use BeyondCode\ErdGenerator\ModelRelation;
 use BeyondCode\ErdGenerator\RelationFinder;
+use BeyondCode\ErdGenerator\Tests\Models\Avatar;
 use BeyondCode\ErdGenerator\Tests\Models\Comment;
 use BeyondCode\ErdGenerator\Tests\Models\Post;
 use BeyondCode\ErdGenerator\Tests\Models\User;
-use BeyondCode\ErdGenerator\Tests\Models\User_Avatar;
 use BeyondCode\ErdGenerator\Tests\Models\UserAvatar;
 
 class GetModelRelationsTest extends TestCase
@@ -36,7 +36,7 @@ class GetModelRelationsTest extends TestCase
         $this->assertInstanceOf(ModelRelation::class, $avatar);
         $this->assertSame('avatar', $avatar->getName());
         $this->assertSame('HasOne', $avatar->getType());
-        $this->assertSame(User_Avatar::class, $avatar->getModel());
+        $this->assertSame(Avatar::class, $avatar->getModel());
         $this->assertSame('id', $avatar->getLocalKey());
         $this->assertSame('user_id', $avatar->getForeignKey());
 
