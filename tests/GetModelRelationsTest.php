@@ -8,7 +8,6 @@ use BeyondCode\ErdGenerator\Tests\Models\Avatar;
 use BeyondCode\ErdGenerator\Tests\Models\Comment;
 use BeyondCode\ErdGenerator\Tests\Models\Post;
 use BeyondCode\ErdGenerator\Tests\Models\User;
-use BeyondCode\ErdGenerator\Tests\Models\UserAvatar;
 
 class GetModelRelationsTest extends TestCase
 {
