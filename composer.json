@@ -49,10 +49,7 @@
         "laravel": {
             "providers": [
                 "BeyondCode\\ErdGenerator\\ErdGeneratorServiceProvider"
-            ],
-            "aliases": {
-                "ErdGenerator": "BeyondCode\\ErdGenerator\\ErdGeneratorFacade"
-            }
+            ]
         }
     }
 }
