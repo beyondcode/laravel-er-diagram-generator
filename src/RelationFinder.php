@@ -80,7 +80,7 @@ class RelationFinder
 
                 if ($return instanceof BelongsTo) {
                     $foreignKey = $this->getParentKey($return->getQualifiedOwnerKeyName());
-                    $localKey = $return->getForeignKey();
+                    $localKey = $return->getForeignKeyName();
                 }
 
                 return [
