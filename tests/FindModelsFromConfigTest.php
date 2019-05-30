@@ -19,7 +19,11 @@ class FindModelsFromConfigTest extends TestCase
         $classNames = $finder->getModelsInDirectory(__DIR__ . "/Models");
 
         $this->assertCount(4, $classNames);
-        $this->assertSame(Avatar::class, $classNames->first());
+
+        $this->assertSame(
+            [Avatar::class, Comment::class, Post::class, User::class],
+            $classNames->values()->all()
+        );
     }
 
     /** @test */
@@ -42,5 +46,4 @@ class FindModelsFromConfigTest extends TestCase
             $classNames->values()->all()
         );
     }
-
 }

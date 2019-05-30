@@ -30,7 +30,7 @@ class Model
      */
     public function getNodeName()
     {
-        return str_slug($this->model);
+        return str_replace('-', '', str_slug($this->model));
     }
 
     /**
@@ -42,7 +42,7 @@ class Model
     }
 
     /**
-     * @return ModelRelation[]
+     * @return Collection
      */
     public function getRelations()
     {

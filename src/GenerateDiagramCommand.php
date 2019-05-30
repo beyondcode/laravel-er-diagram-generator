@@ -2,11 +2,11 @@
 
 namespace BeyondCode\ErdGenerator;
 
-use ReflectionClass;
-use Illuminate\Console\Command;
-use phpDocumentor\GraphViz\Graph;
-use Illuminate\Support\Collection;
 use BeyondCode\ErdGenerator\Model as GraphModel;
+use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
+use phpDocumentor\GraphViz\Graph;
+use ReflectionClass;
 
 class GenerateDiagramCommand extends Command
 {
@@ -49,6 +49,9 @@ class GenerateDiagramCommand extends Command
         $this->graphBuilder = $graphBuilder;
     }
 
+    /**
+     * @throws \phpDocumentor\GraphViz\Exception
+     */
     public function handle()
     {
         $models = $this->getModelsThatShouldBeInspected();
