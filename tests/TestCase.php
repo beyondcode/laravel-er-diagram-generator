@@ -7,7 +7,7 @@ use BeyondCode\ErdGenerator\ErdGeneratorServiceProvider;
 
 abstract class TestCase extends \Orchestra\Testbench\TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
