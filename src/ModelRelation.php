@@ -1,6 +1,7 @@
 <?php
 
 namespace BeyondCode\ErdGenerator;
+use Illuminate\Support\Str;
 
 class ModelRelation
 {
@@ -32,7 +33,7 @@ class ModelRelation
      */
     public function getModelNodeName()
     {
-        return str_slug($this->model);
+        return Str::slug($this->model);
     }
 
     /**

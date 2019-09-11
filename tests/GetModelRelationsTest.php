@@ -8,6 +8,8 @@ use BeyondCode\ErdGenerator\Tests\Models\Avatar;
 use BeyondCode\ErdGenerator\Tests\Models\Comment;
 use BeyondCode\ErdGenerator\Tests\Models\Post;
 use BeyondCode\ErdGenerator\Tests\Models\User;
+use Illuminate\Support\Arr;
+
 
 class GetModelRelationsTest extends TestCase
 {
@@ -63,7 +65,7 @@ class GetModelRelationsTest extends TestCase
         $relations = $finder->getModelRelations(User::class);
 
         $this->assertCount(2, $relations);
-        $this->assertNull(array_get($relations, 'posts'));
+        $this->assertNull(Arr::get($relations, 'posts'));
     }
 
 }

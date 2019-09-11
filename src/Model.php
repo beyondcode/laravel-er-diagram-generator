@@ -3,6 +3,7 @@
 namespace BeyondCode\ErdGenerator;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class Model
 {
@@ -30,7 +31,7 @@ class Model
      */
     public function getNodeName()
     {
-        return str_replace('-', '', str_slug($this->model));
+        return str_replace('-', '', Str::slug($this->model));
     }
 
     /**
