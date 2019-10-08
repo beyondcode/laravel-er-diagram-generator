@@ -145,7 +145,6 @@ class GraphBuilder
      * @param Node $modelNode
      * @param Node $relatedModelNode
      * @return void
-     * @throws \ReflectionException
      */
     protected function connectBelongsToMany(
         Model $model,
@@ -165,34 +164,36 @@ class GraphBuilder
 
         $pivotClass = $eloquentRelation->getPivotClass();
 
-        /** @var EloquentModel $relationModel */
-        $pivotModel = app($pivotClass);
-        $pivotModel->setTable($eloquentRelation->getTable());
-        $label = (new \ReflectionClass($pivotClass))->getShortName();
-        $pivotTable = $eloquentRelation->getTable();
-        $this->addNodeToGraph($pivotModel, $pivotTable, $label);
+        try {
+            /** @var EloquentModel $relationModel */
+            $pivotModel = app($pivotClass);
+            $pivotModel->setTable($eloquentRelation->getTable());
+            $label = (new \ReflectionClass($pivotClass))->getShortName();
+            $pivotTable = $eloquentRelation->getTable();
+            $this->addNodeToGraph($pivotModel, $pivotTable, $label);
 
-        $pivotModelNode = $this->graph->findNode($pivotTable);
+            $pivotModelNode = $this->graph->findNode($pivotTable);
 
-        $relation = new ModelRelation(
-            $relationName,
-            'BelongsToMany',
-            $model->getModel(),
-            $eloquentRelation->getParent()->getKeyName(),
-            $eloquentRelation->getForeignPivotKeyName()
-        );
+            $relation = new ModelRelation(
+                $relationName,
+                'BelongsToMany',
+                $model->getModel(),
+                $eloquentRelation->getParent()->getKeyName(),
+                $eloquentRelation->getForeignPivotKeyName()
+            );
 
-        $this->connectNodes($modelNode, $pivotModelNode, $relation);
+            $this->connectNodes($modelNode, $pivotModelNode, $relation);
 
-        $relation = new ModelRelation(
-            $relationName,
-            'BelongsToMany',
-            $model->getModel(),
-            $eloquentRelation->getRelatedPivotKeyName(),
-            $eloquentRelation->getRelated()->getKeyName()
-        );
+            $relation = new ModelRelation(
+                $relationName,
+                'BelongsToMany',
+                $model->getModel(),
+                $eloquentRelation->getRelatedPivotKeyName(),
+                $eloquentRelation->getRelated()->getKeyName()
+            );
 
-        $this->connectNodes($pivotModelNode, $relatedModelNode, $relation);
+            $this->connectNodes($pivotModelNode, $relatedModelNode, $relation);
+        } catch (\ReflectionException $e){}
     }
 
     /**
@@ -200,7 +201,6 @@ class GraphBuilder
      * @param ModelRelation $relation
      * @param Node $modelNode
      * @param Node $relatedModelNode
-     * @throws \ReflectionException
      */
     protected function connectByRelation(
         Model $model,
