@@ -84,7 +84,15 @@ dir="both"
 arrowhead="tee"
 arrowtail="none"
 ]
-beyondcodeerdgeneratortestsmodelsuser -> beyondcodeerdgeneratortestsmodelscomment [
+beyondcodeerdgeneratortestsmodelsuser:id -> comment_user:user_id [
+label=" "
+xlabel="BelongsToMany
+comments"
+color="#003049"
+penwidth="1.8"
+fontname="Helvetica Neue"
+]
+comment_user:comment_id -> beyondcodeerdgeneratortestsmodelscomment:id [
 label=" "
 xlabel="BelongsToMany
 comments"
@@ -140,6 +148,17 @@ label=<<table width="100%" height="100%" border="0" margin="0" cellborder="1" ce
 <tr width="100%"><td port="email" align="left" width="100%"  bgcolor="#ffffff"><font color="#333333" >email (string)</font></td></tr>
 <tr width="100%"><td port="created_at" align="left" width="100%"  bgcolor="#ffffff"><font color="#333333" >created_at (datetime)</font></td></tr>
 <tr width="100%"><td port="updated_at" align="left" width="100%"  bgcolor="#ffffff"><font color="#333333" >updated_at (datetime)</font></td></tr>
+</table>>
+margin="0"
+shape="rectangle"
+fontname="Helvetica Neue"
+]
+"comment_user" [
+label=<<table width="100%" height="100%" border="0" margin="0" cellborder="1" cellspacing="0" cellpadding="10">
+<tr width="100%"><td width="100%" bgcolor="#d3d3d3"><font color="#333333">Pivot</font></td></tr>
+<tr width="100%"><td port="id" align="left" width="100%"  bgcolor="#ffffff"><font color="#333333" >id (integer)</font></td></tr>
+<tr width="100%"><td port="comment_id" align="left" width="100%"  bgcolor="#ffffff"><font color="#333333" >comment_id (integer)</font></td></tr>
+<tr width="100%"><td port="user_id" align="left" width="100%"  bgcolor="#ffffff"><font color="#333333" >user_id (integer)</font></td></tr>
 </table>>
 margin="0"
 shape="rectangle"

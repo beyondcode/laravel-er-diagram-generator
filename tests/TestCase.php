@@ -60,6 +60,12 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
             $table->string('body');
             $table->morphs('commentable');
         });
+
+        $this->app['db']->connection()->getSchemaBuilder()->create('comment_user', function (Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('comment_id');
+            $table->unsignedInteger('user_id');
+        });
     }
 
 }
