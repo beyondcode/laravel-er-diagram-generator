@@ -178,7 +178,7 @@ class GraphBuilder
             $relationName,
             'BelongsToMany',
             $model->getModel(),
-            $eloquentRelation->getParentKeyName(),
+            $eloquentRelation->getParent()->getKeyName(),
             $eloquentRelation->getForeignPivotKeyName()
         );
 
@@ -189,7 +189,7 @@ class GraphBuilder
             'BelongsToMany',
             $model->getModel(),
             $eloquentRelation->getRelatedPivotKeyName(),
-            $eloquentRelation->getRelatedKeyName()
+            $eloquentRelation->getRelated()->getKeyName()
         );
 
         $this->connectNodes($pivotModelNode, $relatedModelNode, $relation);
