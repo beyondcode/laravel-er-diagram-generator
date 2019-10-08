@@ -40,7 +40,7 @@ class ModelFinder
             return !empty($className)
                 && is_subclass_of($className, EloquentModel::class)
                 && ! (new ReflectionClass($className))->isAbstract();
-        })->diff($ignoreModels);
+        })->diff($ignoreModels)->sort();
     }
 
     protected function getFullyQualifiedClassNameFromFile(string $path): string
