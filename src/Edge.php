@@ -4,6 +4,13 @@ namespace BeyondCode\ErdGenerator;
 
 use phpDocumentor\GraphViz\Node;
 
+/**
+ * Class Edge
+ * @package BeyondCode\ErdGenerator
+ * @method void setLabel(string $name)
+ * @method void setXLabel(string $name)
+ *
+ */
 class Edge extends \phpDocumentor\GraphViz\Edge
 {
     protected $fromPort = null;

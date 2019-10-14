@@ -84,7 +84,15 @@ dir="both"
 arrowhead="tee"
 arrowtail="none"
 ]
-beyondcodeerdgeneratortestsmodelsuser -> beyondcodeerdgeneratortestsmodelscomment [
+beyondcodeerdgeneratortestsmodelsuser:id -> comment_user:user_id [
+label=" "
+xlabel="BelongsToMany
+comments"
+color="#003049"
+penwidth="1.8"
+fontname="Helvetica Neue"
+]
+comment_user:comment_id -> beyondcodeerdgeneratortestsmodelscomment:id [
 label=" "
 xlabel="BelongsToMany
 comments"
@@ -119,6 +127,14 @@ fontname="Helvetica Neue"
 "beyondcodeerdgeneratortestsmodelsuser" [
 label=<<table width="100%" height="100%" border="0" margin="0" cellborder="1" cellspacing="0" cellpadding="10">
 <tr width="100%"><td width="100%" bgcolor="#d3d3d3"><font color="#333333">User</font></td></tr>
+</table>>
+margin="0"
+shape="rectangle"
+fontname="Helvetica Neue"
+]
+"comment_user" [
+label=<<table width="100%" height="100%" border="0" margin="0" cellborder="1" cellspacing="0" cellpadding="10">
+<tr width="100%"><td width="100%" bgcolor="#d3d3d3"><font color="#333333">Pivot</font></td></tr>
 </table>>
 margin="0"
 shape="rectangle"
