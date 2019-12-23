@@ -1,5 +1,5 @@
 {
-    "name": "beyondcode/laravel-er-diagram-generator",
+    "name": "reallyli/laravel-module-er-diagram-generator",
     "description": "Generate ER diagrams from your Laravel models.",
     "keywords": [
         "beyondcode",
