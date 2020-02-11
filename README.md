@@ -86,6 +86,11 @@ Or use one of the other [output formats](https://www.graphviz.org/doc/info/outpu
 php artisan generate:erd output.svg --format=svg
 ```
 
+You may focus on specific models, if those models are too many
+```bash
+php artisan generate:erd --focus=App\\Models\\Comment,App\\Models\\Post
+```
+
 ## Customization
 
 Please take a look at the published `erd-generator.php` configuration file for all available customization options.
