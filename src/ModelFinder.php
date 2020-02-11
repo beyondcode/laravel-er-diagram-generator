@@ -19,9 +19,23 @@ class ModelFinder
     /** @var Filesystem */
     protected $filesystem;
 
-    public function __construct(Filesystem $filesystem)
+    /** @var RelationFinder */
+    protected $relationFinder;
+
+    /** @var array $focus */
+    protected $focus;
+
+    public function __construct(Filesystem $filesystem, RelationFinder $relationFinder)
     {
         $this->filesystem = $filesystem;
+
+        $this->relationFinder = $relationFinder;
+    }
+
+    public function setFocus(array $focus = []): self
+    {
+        $this->focus = $focus;
+        return $this;
     }
 
     public function getModelsInDirectory(string $directory): Collection
@@ -40,7 +54,13 @@ class ModelFinder
             return !empty($className)
                 && is_subclass_of($className, EloquentModel::class)
                 && ! (new ReflectionClass($className))->isAbstract();
-        })->diff($ignoreModels)->sort();
+        })->diff($ignoreModels)
+            ->filter(function (string $className) {
+                if (0 === count($this->focus)) {
+                    return true;
+                }
+                return $this->hasRelationWithFocus($className);
+            })->sort();
     }
 
     protected function getFullyQualifiedClassNameFromFile(string $path): string
@@ -72,5 +92,21 @@ class ModelFinder
                     return $statement->namespacedName->toString();
                 })
                 ->first() ?? '';
+    }
+
+    protected function hasRelationWithFocus(string $className): bool
+    {
+        if (in_array($className, $this->focus)) {
+            return true;
+        }
+
+        $relations = $this->relationFinder->getModelRelations($className);
+        /** @var ModelRelation $relation */
+        foreach ($relations as $relation) {
+            if (in_array($relation->getModel(), $this->focus)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

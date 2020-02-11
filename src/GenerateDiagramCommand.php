@@ -19,7 +19,11 @@ class GenerateDiagramCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'generate:erd {filename?} {--format=png}';
+    protected $signature = 'generate:erd
+                            {filename?}
+                            {--format=png}
+                            {--focus= : Focus on these model(s), separate by comma(,)}
+                            ';
 
     /**
      * The console command description.
@@ -100,9 +104,15 @@ class GenerateDiagramCommand extends Command
 
     protected function getAllModelsFromEachDirectory(array $directories): Collection
     {
+        $focus = array_filter(
+            explode(',', $this->option('focus'))
+        );
+
         return collect($directories)
-            ->map(function ($directory) {
-                return $this->modelFinder->getModelsInDirectory($directory)->all();
+            ->map(function ($directory) use ($focus) {
+                return $this->modelFinder
+                    ->setFocus($focus)
+                    ->getModelsInDirectory($directory)->all();
             })
             ->flatten();
     }
