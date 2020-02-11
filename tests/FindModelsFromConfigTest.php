@@ -3,6 +3,7 @@
 namespace BeyondCode\ErdGenerator\Tests;
 
 use BeyondCode\ErdGenerator\ModelFinder;
+use BeyondCode\ErdGenerator\RelationFinder;
 use BeyondCode\ErdGenerator\Tests\Models\Avatar;
 use BeyondCode\ErdGenerator\Tests\Models\Comment;
 use BeyondCode\ErdGenerator\Tests\Models\Post;
@@ -14,7 +15,7 @@ class FindModelsFromConfigTest extends TestCase
     /** @test */
     public function it_can_find_class_names_from_directory()
     {
-        $finder = new ModelFinder(app()->make('files'));
+        $finder = new ModelFinder(app()->make('files'), app()->make(RelationFinder::class));
 
         $classNames = $finder->getModelsInDirectory(__DIR__ . "/Models");
 
@@ -36,7 +37,7 @@ class FindModelsFromConfigTest extends TestCase
             ]
         ]);
 
-        $finder = new ModelFinder(app()->make('files'));
+        $finder = new ModelFinder(app()->make('files'), app()->make(RelationFinder::class));
 
         $classNames = $finder->getModelsInDirectory(__DIR__ . "/Models");
 

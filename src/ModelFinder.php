@@ -23,7 +23,7 @@ class ModelFinder
     protected $relationFinder;
 
     /** @var array $focus */
-    protected $focus;
+    protected $focus = [];
 
     public function __construct(Filesystem $filesystem, RelationFinder $relationFinder)
     {
