@@ -39,7 +39,7 @@ return [
     'use_db_schema' => true,
 
     /*
-     * This setting toggles weather the column types (VARCHAR, INT, TEXT, etc.)
+     * This setting toggles whether the column types (VARCHAR, INT, TEXT, etc.)
      * should be visible on the generated diagram. This option requires
      * 'use_db_schema' to be set to true.
      */
