@@ -23,7 +23,18 @@ return [
         //     'user'
         // ]
     ],
-    
+
+    /*
+     * If you want to see only specific models, specify them here using fully qualified
+     * classnames.
+     *
+     * Note: that if this array is filled, the 'ignore' array will not be used.
+    */
+    'whitelist' => [
+        // App\User::class,
+        // App\Post::class,
+    ],
+
     /*
      * If true, all directories specified will be scanned recursively for models.
      * Set this to false if you prefer to explicitly define each directory that should

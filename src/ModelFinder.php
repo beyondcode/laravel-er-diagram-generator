@@ -31,8 +31,9 @@ class ModelFinder
             $this->filesystem->files($directory);
 
         $ignoreModels = array_filter(config('erd-generator.ignore', []), 'is_string');
+        $whitelistModels = array_filter(config('erd-generator.whitelist', []), 'is_string');
 
-        return Collection::make($files)->filter(function ($path) {
+        $collection = Collection::make($files)->filter(function ($path) {
             return Str::endsWith($path, '.php');
         })->map(function ($path) {
             return $this->getFullyQualifiedClassNameFromFile($path);
@@ -40,7 +41,15 @@ class ModelFinder
             return !empty($className)
                 && is_subclass_of($className, EloquentModel::class)
                 && ! (new ReflectionClass($className))->isAbstract();
-        })->diff($ignoreModels)->sort();
+        });
+
+        if(!count($whitelistModels)) {
+          return $collection->diff($ignoreModels)->sort();
+        }
+
+        return $collection->filter(function (string $className) use ($whitelistModels) {
+            return in_array($className, $whitelistModels);
+        });
     }
 
     protected function getFullyQualifiedClassNameFromFile(string $path): string
