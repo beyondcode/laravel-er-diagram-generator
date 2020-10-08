@@ -46,4 +46,22 @@ class FindModelsFromConfigTest extends TestCase
             $classNames->values()->all()
         );
     }
+
+    /** @test */
+    public function it_will_only_return_models_in_whitelist_if_present()
+    {
+        $this->app['config']->set('erd-generator.whitelist', [
+            Avatar::class,
+        ]);
+
+        $finder = new ModelFinder(app()->make('files'));
+
+        $classNames = $finder->getModelsInDirectory(__DIR__ . "/Models");
+
+        $this->assertCount(1, $classNames);
+        $this->assertEquals(
+            [Avatar::class],
+            $classNames->values()->all()
+        );
+    }
 }
