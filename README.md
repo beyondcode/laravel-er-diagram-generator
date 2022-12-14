@@ -1,4 +1,4 @@
-# Laravel ER Diagram Generator
+# Laravel ER Diagram Generator for Php 8, Laravel 9 and Linux Filesystem support
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/beyondcode/laravel-er-diagram-generator.svg?style=flat-square)](https://packagist.org/packages/beyondcode/laravel-er-diagram-generator)
 [![Build Status](https://img.shields.io/travis/beyondcode/laravel-er-diagram-generator/master.svg?style=flat-square)](https://travis-ci.org/beyondcode/laravel-er-diagram-generator)
