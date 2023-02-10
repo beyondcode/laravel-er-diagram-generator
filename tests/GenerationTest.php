@@ -56,6 +56,6 @@ class GenerationTest extends TestCase
             '--format' => 'jpeg'
         ]);
 
-        $this->assertContains('Wrote diagram to graph.jpeg', Artisan::output());
+        $this->assertStringContainsString('Wrote diagram to graph.jpeg', Artisan::output());
     }
 }

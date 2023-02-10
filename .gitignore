@@ -4,3 +4,5 @@ docs
 vendor
 coverage
 .idea
+.phpunit.result.cache
+graph.jpeg
