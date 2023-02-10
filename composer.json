@@ -23,7 +23,7 @@
     },
     "require-dev": {
         "larapack/dd": "^1.0",
-        "orchestra/testbench": "~3.5|~3.6|~3.7|~3.8|^4.0|^7.0",
+        "orchestra/testbench": "~3.5|~3.6|~3.7|~3.8|^4.0|^7.0|^8.0",
         "phpunit/phpunit": "^7.0| ^8.0|^9.5.10",
         "spatie/phpunit-snapshot-assertions": "^1.3|^4.2"
     },
