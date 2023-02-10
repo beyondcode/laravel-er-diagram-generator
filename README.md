@@ -52,7 +52,7 @@ $app->register(BeyondCode\ErdGenerator\ErdGeneratorServiceProvider::class);
 
 ## Usage
 
-By default, the package will automatically detect all models in your `app` directory that extend the Eloquent Model class. If you would like you explicitly define where your models are located, you can publish the configuration file using the following command.
+By default, the package will automatically detect all models in your `app/Models` directory that extend the Eloquent Model class. If you would like you explicitly define where your models are located, you can publish the configuration file using the following command.
 
 ```bash
 php artisan vendor:publish --provider=BeyondCode\\ErdGenerator\\ErdGeneratorServiceProvider
