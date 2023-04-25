@@ -22,7 +22,7 @@ class GraphBuilder
         $this->graph = new Graph();
 
         foreach (config('erd-generator.graph') as $key => $value) {
-            $this->graph->{"set${key}"}($value);
+            $this->graph->{"set{$key}"}($value);
         }
 
         $this->addModelsToGraph($models);
@@ -94,7 +94,7 @@ class GraphBuilder
         $node->setLabel($this->getModelLabel($eloquentModel, $label));
 
         foreach (config('erd-generator.node') as $key => $value) {
-            $node->{"set${key}"}($value);
+            $node->{"set{$key}"}($value);
         }
 
         $this->graph->setNode($node);
@@ -129,11 +129,11 @@ class GraphBuilder
         $edge->setXLabel($relation->getType() . PHP_EOL . $relation->getName());
 
         foreach (config('erd-generator.edge') as $key => $value) {
-            $edge->{"set${key}"}($value);
+            $edge->{"set{$key}"}($value);
         }
 
         foreach (config('erd-generator.relations.' . $relation->getType(), []) as $key => $value) {
-            $edge->{"set${key}"}($value);
+            $edge->{"set{$key}"}($value);
         }
 
         $this->graph->link($edge);
