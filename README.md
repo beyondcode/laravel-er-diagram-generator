@@ -1,8 +1,6 @@
 # Laravel ER Diagram Generator
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/beyondcode/laravel-er-diagram-generator.svg?style=flat-square)](https://packagist.org/packages/beyondcode/laravel-er-diagram-generator)
-[![Build Status](https://img.shields.io/travis/beyondcode/laravel-er-diagram-generator/master.svg?style=flat-square)](https://travis-ci.org/beyondcode/laravel-er-diagram-generator)
-[![Quality Score](https://img.shields.io/scrutinizer/g/beyondcode/laravel-er-diagram-generator.svg?style=flat-square)](https://scrutinizer-ci.com/g/beyondcode/laravel-er-diagram-generator)
 [![Total Downloads](https://img.shields.io/packagist/dt/beyondcode/laravel-er-diagram-generator.svg?style=flat-square)](https://packagist.org/packages/beyondcode/laravel-er-diagram-generator)
 
 This package lets you generate entity relation diagrams by inspecting the relationships defined in your model files.
@@ -46,7 +44,7 @@ If you are using Laravel 5.5+, the package will automatically register the servi
 If you are using Lumen, you will need to add the following to `bootstrap\app.php`:
 
 ```php
-\\ Register Service Providers
+# Register Service Providers
 $app->register(BeyondCode\ErdGenerator\ErdGeneratorServiceProvider::class);
 ```
 

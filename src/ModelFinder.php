@@ -54,7 +54,10 @@ class ModelFinder
 
     protected function getFullyQualifiedClassNameFromFile(string $path): string
     {
-        $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
+        $factory = new ParserFactory();
+        $parser = method_exists($factory, 'createForHostVersion')
+            ? $factory->createForHostVersion()
+            : $factory->create(ParserFactory::PREFER_PHP7);
 
         $traverser = new NodeTraverser();
         $traverser->addVisitor(new NameResolver());
