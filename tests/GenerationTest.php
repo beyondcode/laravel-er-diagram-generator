@@ -45,7 +45,7 @@ class GenerationTest extends TestCase
         ]);
 
         $this->assertMatchesSnapshot(Artisan::output());
-    }o
+    }
 
     /** @test */
     public function it_generated_graphviz_in_jpeg_format()
