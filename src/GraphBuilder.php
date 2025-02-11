@@ -17,7 +17,7 @@ class GraphBuilder
      * @param $models
      * @return Graph
      */
-    public function buildGraph(Collection $models) : Graph
+    public function buildGraph(Collection $models): Graph
     {
         $this->graph = new Graph();
 
@@ -32,40 +32,23 @@ class GraphBuilder
 
     protected function getTableColumnsFromModel(EloquentModel $model)
     {
-        try {
-
-            $table = $model->getConnection()->getTablePrefix() . $model->getTable();
-            $schema = $model->getConnection()->getDoctrineSchemaManager($table);
-            $databasePlatform = $schema->getDatabasePlatform();
-            $databasePlatform->registerDoctrineTypeMapping('enum', 'string');
-
-            $database = null;
-
-            if (strpos($table, '.')) {
-                list($database, $table) = explode('.', $table);
-            }
-
-            return $schema->listTableColumns($table, $database);
-        } catch (\Throwable $e) {
-        }
-
-        return [];
+        return \Schema::getColumns($model->getTable());
     }
 
     protected function getModelLabel(EloquentModel $model, string $label)
     {
 
         $table = '<<table width="100%" height="100%" border="0" margin="0" cellborder="1" cellspacing="0" cellpadding="10">' . PHP_EOL;
-        $table .= '<tr width="100%"><td width="100%" bgcolor="'.config('erd-generator.table.header_background_color').'"><font color="'.config('erd-generator.table.header_font_color').'">' . $label . '</font></td></tr>' . PHP_EOL;
+        $table .= '<tr width="100%"><td width="100%" bgcolor="' . config('erd-generator.table.header_background_color') . '"><font color="' . config('erd-generator.table.header_font_color') . '">' . $label . '</font></td></tr>' . PHP_EOL;
 
         if (config('erd-generator.use_db_schema')) {
             $columns = $this->getTableColumnsFromModel($model);
             foreach ($columns as $column) {
-                $label = $column->getName();
+                $label = $column['name'];
                 if (config('erd-generator.use_column_types')) {
-                    $label .= ' ('.$column->getType()->getName().')';
+                    $label .= ' (' . $column['type'] . ')';
                 }
-                $table .= '<tr width="100%"><td port="' . $column->getName() . '" align="left" width="100%"  bgcolor="'.config('erd-generator.table.row_background_color').'"><font color="'.config('erd-generator.table.row_font_color').'" >' . $label . '</font></td></tr>' . PHP_EOL;
+                $table .= '<tr width="100%"><td port="' . $label . '" align="left" width="100%"  bgcolor="' . config('erd-generator.table.row_background_color') . '"><font color="' . config('erd-generator.table.row_font_color') . '" >' . $label . '</font></td></tr>' . PHP_EOL;
             }
         }
 
@@ -193,7 +176,8 @@ class GraphBuilder
             );
 
             $this->connectNodes($pivotModelNode, $relatedModelNode, $relation);
-        } catch (\ReflectionException $e){}
+        } catch (\ReflectionException $e) {
+        }
     }
 
     /**
