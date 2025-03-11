@@ -19,7 +19,7 @@ class GenerateDiagramCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'generate:erd {filename?} {--format=png} {--text-output : Output as text file instead of image} {--structured : Generate structured text output for AI models}';
+    protected $signature = 'generate:erd {filename?} {--format=png} {--text-output : Output as text file instead of image}';
 
     /**
      * The console command description.
@@ -70,13 +70,14 @@ class GenerateDiagramCommand extends Command
             );
         });
 
-        // If structured text output is requested, generate it
-        if ($this->option('structured')) {
+        // Check if output filename has .txt extension
+        $outputFileName = $this->getOutputFileName();
+        if (pathinfo($outputFileName, PATHINFO_EXTENSION) === 'txt') {
+            // Generate structured text output for .txt files
             $textOutput = $this->graphBuilder->generateStructuredTextRepresentation($models);
-            $outputFileName = $this->getTextOutputFileName();
             file_put_contents($outputFileName, $textOutput);
             $this->info(PHP_EOL);
-            $this->info('Wrote structured text diagram to ' . $outputFileName);
+            $this->info('Wrote structured ER diagram to ' . $outputFileName);
             return;
         }
 
@@ -99,10 +100,10 @@ class GenerateDiagramCommand extends Command
             return;
         }
 
-        $graph->export($this->option('format'), $this->getOutputFileName());
+        $graph->export($this->option('format'), $outputFileName);
 
         $this->info(PHP_EOL);
-        $this->info('Wrote diagram to ' . $this->getOutputFileName());
+        $this->info('Wrote diagram to ' . $outputFileName);
     }
 
     protected function getOutputFileName(): string

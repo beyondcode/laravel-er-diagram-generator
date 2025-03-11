@@ -96,13 +96,39 @@ This will generate a text file with the GraphViz DOT representation of the ER di
 
 ### Structured Text Output for AI Models
 
-If you want to generate a structured text representation of the ER diagram that is more suitable for AI models, you can use the `--structured` option:
+If you want to generate a structured text representation of the ER diagram that is more suitable for AI models, simply specify a filename with a `.txt` extension:
 
 ```bash
-php artisan generate:erd output.txt --structured
+php artisan generate:erd output.txt
 ```
 
-This will generate a Markdown file with a structured representation of the entities and their relationships, which can be used as context for AI models.
+This will automatically generate a Markdown file with a structured representation of the entities and their relationships, which can be used as context for AI models.
+
+#### Output Format
+
+The structured output format looks like this:
+
+```markdown
+# Entity Relationship Diagram
+
+## Entities
+
+### User (`App\Models\User`)
+
+#### Attributes:
+- `id` (integer)
+- `name` (string)
+- `email` (string)
+...
+
+## Relationships
+
+### User Relationships
+- **HasMany** `posts` to Post (Local Key: `id`, Foreign Key: `user_id`)
+...
+```
+
+This format is particularly useful when providing context to AI models about your database structure.
 
 ## Customization
 

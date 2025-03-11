@@ -60,7 +60,7 @@ class GenerationTest extends TestCase
     }
 
     /** @test */
-    public function it_generates_text_output_file()
+    public function it_generates_text_output_file_with_text_output_option()
     {
         $this->app['config']->set('erd-generator.directories', [__DIR__ . '/Models']);
         
@@ -90,7 +90,7 @@ class GenerationTest extends TestCase
     }
     
     /** @test */
-    public function it_generates_structured_text_output_file()
+    public function it_generates_structured_text_output_for_txt_extension()
     {
         $this->app['config']->set('erd-generator.directories', [__DIR__ . '/Models']);
         
@@ -102,12 +102,11 @@ class GenerationTest extends TestCase
         }
         
         Artisan::call('generate:erd', [
-            'filename' => $outputFile,
-            '--structured' => true
+            'filename' => $outputFile
         ]);
         
         $this->assertFileExists($outputFile);
-        $this->assertStringContainsString('Wrote structured text diagram to ' . $outputFile, Artisan::output());
+        $this->assertStringContainsString('Wrote structured ER diagram to ' . $outputFile, Artisan::output());
         
         // Check if the file contains structured Markdown content
         $fileContent = file_get_contents($outputFile);
