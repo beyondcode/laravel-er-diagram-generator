@@ -72,8 +72,10 @@ class GraphBuilder
                 
                 foreach ($model->getRelations() as $relation) {
                     /** @var ModelRelation $relation */
-                    $relatedModel = $models->first(function ($m) use ($relation) {
-                        return $m->getModel() === $relation->getRelatedModel();
+                    // Find the related model by comparing model class names
+                    $relatedModelClass = $relation->getModel();
+                    $relatedModel = $models->first(function ($m) use ($relatedModelClass) {
+                        return $m->getModel() === $relatedModelClass;
                     });
                     
                     if ($relatedModel) {
