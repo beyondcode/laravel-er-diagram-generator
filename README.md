@@ -84,6 +84,26 @@ Or use one of the other [output formats](https://www.graphviz.org/doc/info/outpu
 php artisan generate:erd output.svg --format=svg
 ```
 
+### Text Output
+
+If you want to generate a text representation of the ER diagram instead of an image, you can use the `--text-output` option:
+
+```bash
+php artisan generate:erd output.txt --text-output
+```
+
+This will generate a text file with the GraphViz DOT representation of the ER diagram.
+
+### Structured Text Output for AI Models
+
+If you want to generate a structured text representation of the ER diagram that is more suitable for AI models, you can use the `--structured` option:
+
+```bash
+php artisan generate:erd output.txt --structured
+```
+
+This will generate a Markdown file with a structured representation of the entities and their relationships, which can be used as context for AI models.
+
 ## Customization
 
 Please take a look at the published `erd-generator.php` configuration file for all available customization options.

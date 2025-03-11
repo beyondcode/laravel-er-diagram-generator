@@ -19,7 +19,7 @@ class GenerateDiagramCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'generate:erd {filename?} {--format=png}';
+    protected $signature = 'generate:erd {filename?} {--format=png} {--text-output : Output as text file instead of image} {--structured : Generate structured text output for AI models}';
 
     /**
      * The console command description.
@@ -70,10 +70,32 @@ class GenerateDiagramCommand extends Command
             );
         });
 
+        // If structured text output is requested, generate it
+        if ($this->option('structured')) {
+            $textOutput = $this->graphBuilder->generateStructuredTextRepresentation($models);
+            $outputFileName = $this->getTextOutputFileName();
+            file_put_contents($outputFileName, $textOutput);
+            $this->info(PHP_EOL);
+            $this->info('Wrote structured text diagram to ' . $outputFileName);
+            return;
+        }
+
         $graph = $this->graphBuilder->buildGraph($models);
 
-        if ($this->option('format') === self::FORMAT_TEXT) {
-            $this->info($graph->__toString());
+        if ($this->option('text-output') || $this->option('format') === self::FORMAT_TEXT) {
+            $textOutput = $graph->__toString();
+            
+            // If text-output option is set, write to file
+            if ($this->option('text-output')) {
+                $outputFileName = $this->getTextOutputFileName();
+                file_put_contents($outputFileName, $textOutput);
+                $this->info(PHP_EOL);
+                $this->info('Wrote text diagram to ' . $outputFileName);
+                return;
+            }
+            
+            // Otherwise just output to console
+            $this->info($textOutput);
             return;
         }
 
@@ -87,6 +109,11 @@ class GenerateDiagramCommand extends Command
     {
         return $this->argument('filename') ?:
             static::DEFAULT_FILENAME . '.' . $this->option('format');
+    }
+
+    protected function getTextOutputFileName(): string
+    {
+        return $this->argument('filename') ?: static::DEFAULT_FILENAME . '.txt';
     }
 
     protected function getModelsThatShouldBeInspected(): Collection
