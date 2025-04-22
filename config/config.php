@@ -57,6 +57,16 @@ return [
     'use_column_types' => true,
 
     /*
+     * If you want to ignore specific columns in specific tables you can specify them here.
+     * Use the dot notation to specify the table and the column : table.column
+     * This option only apply when 'use_db_schema' is set to true.
+    */
+    'ignore_columns' => [
+        // 'users.lastname',
+        // 'posts.description',
+    ],
+
+    /*
      * These colors will be used in the table representation for each entity in
      * your graph.
      */
