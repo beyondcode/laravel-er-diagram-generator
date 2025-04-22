@@ -64,12 +64,13 @@ class GraphBuilder
             $columns = $this->getTableColumnsFromModel($model);
             foreach ($columns as $column) {
 
-                $label = $column['name'];
-                if (config('erd-generator.use_column_types') && isset($column['type'])) {
-                    $label .= ' ('.$column['type'].')';
+                if (isset($column['name'])) {
+                    $label = $column['name'];
+                    if (config('erd-generator.use_column_types') && isset($column['type'])) {
+                        $label .= ' ('.$column['type'].')';
+                    }
+                    $table .= '<tr width="100%"><td port="' . $column['name'] . '" align="left" width="100%"  bgcolor="'.config('erd-generator.table.row_background_color').'"><font color="'.config('erd-generator.table.row_font_color').'" >' . $label . '</font></td></tr>' . PHP_EOL;
                 }
-                $table .= '<tr width="100%"><td port="' . $column['name'] . '" align="left" width="100%"  bgcolor="'.config('erd-generator.table.row_background_color').'"><font color="'.config('erd-generator.table.row_font_color').'" >' . $label . '</font></td></tr>' . PHP_EOL;
-
 
             }
         }
