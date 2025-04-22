@@ -39,7 +39,10 @@ class GraphBuilder
             $columns = Schema::getColumns($table);
             if (config('erd-generator.ignore_columns')) {
                 $columns = collect($columns)->filter(function($column) use($table) {
-                    return !in_array($table.'.'.$column['name'],config('erd-generator.ignore_columns'));
+                    if (isset($column['name'])){
+                        return !in_array($table.'.'.$column['name'],config('erd-generator.ignore_columns'));
+                    }
+                    return false;
                 });
             }
 
@@ -60,11 +63,14 @@ class GraphBuilder
         if (config('erd-generator.use_db_schema')) {
             $columns = $this->getTableColumnsFromModel($model);
             foreach ($columns as $column) {
+
                 $label = $column['name'];
-                if (config('erd-generator.use_column_types')) {
+                if (config('erd-generator.use_column_types') && isset($column['type'])) {
                     $label .= ' ('.$column['type'].')';
                 }
                 $table .= '<tr width="100%"><td port="' . $column['name'] . '" align="left" width="100%"  bgcolor="'.config('erd-generator.table.row_background_color').'"><font color="'.config('erd-generator.table.row_font_color').'" >' . $label . '</font></td></tr>' . PHP_EOL;
+
+
             }
         }
 
