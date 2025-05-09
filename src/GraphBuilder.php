@@ -71,8 +71,8 @@ class GraphBuilder
                     $name = $column->getName();
                     $typeName = $column->getType()->getName();
                 } else { // it's an array!
-                    $name = $column['name'];
-                    $typeName = $column['type_name'];
+                    $name = $column['name'] ?? '';
+                    $typeName = $column['type_name'] ?? '';
                 }
                 $label = $name;
                 if (config('erd-generator.use_column_types')) {
