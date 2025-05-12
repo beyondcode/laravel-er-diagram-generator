@@ -70,19 +70,9 @@ class GenerateDiagramCommand extends Command
             );
         });
 
-        // Check if output filename has .txt extension
-        $outputFileName = $this->getOutputFileName();
-        if (pathinfo($outputFileName, PATHINFO_EXTENSION) === 'txt') {
-            // Generate structured text output for .txt files
-            $textOutput = $this->graphBuilder->generateStructuredTextRepresentation($models);
-            file_put_contents($outputFileName, $textOutput);
-            $this->info(PHP_EOL);
-            $this->info('Wrote structured ER diagram to ' . $outputFileName);
-            return;
-        }
-
         $graph = $this->graphBuilder->buildGraph($models);
 
+        // First check for text-output option
         if ($this->option('text-output') || $this->option('format') === self::FORMAT_TEXT) {
             $textOutput = $graph->__toString();
             
@@ -97,6 +87,17 @@ class GenerateDiagramCommand extends Command
             
             // Otherwise just output to console
             $this->info($textOutput);
+            return;
+        }
+
+        // Then check for .txt extension in filename
+        $outputFileName = $this->getOutputFileName();
+        if (pathinfo($outputFileName, PATHINFO_EXTENSION) === 'txt') {
+            // Generate structured text output for .txt files
+            $textOutput = $this->graphBuilder->generateStructuredTextRepresentation($models);
+            file_put_contents($outputFileName, $textOutput);
+            $this->info(PHP_EOL);
+            $this->info('Wrote structured ER diagram to ' . $outputFileName);
             return;
         }
 
