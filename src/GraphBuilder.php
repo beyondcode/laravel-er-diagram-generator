@@ -33,63 +33,70 @@ class GraphBuilder
 
     /**
      * Generate a structured text representation of the ER diagram
-     * 
+     *
      * @param Collection $models
      * @return string
      */
     public function generateStructuredTextRepresentation(Collection $models) : string
     {
         $output = "# Entity Relationship Diagram\n\n";
-        
+
         // First list all models/entities with their attributes
         $output .= "## Entities\n\n";
-        
+
         foreach ($models as $model) {
             /** @var Model $model */
             $eloquentModel = app($model->getModel());
             $output .= "### " . $model->getLabel() . " (`" . $model->getModel() . "`)\n\n";
-            
+
             // Add table columns if available
             if (config('erd-generator.use_db_schema')) {
                 $columns = $this->getTableColumnsFromModel($eloquentModel);
                 if (count($columns) > 0) {
                     $output .= "#### Attributes:\n\n";
                     foreach ($columns as $column) {
-                        $columnType = config('erd-generator.use_column_types') ? ' (' . $column->getType()->getName() . ')' : '';
-                        $output .= "- `" . $column->getName() . "`" . $columnType . "\n";
+                        if (is_object($column)) {
+                            $name = $column->getName();
+                            $typeName = $column->getType()->getName();
+                        } else {
+                            $name = $column['name'] ?? '';
+                            $typeName = $column['type_name'] ?? '';
+                        }
+                        $columnType = config('erd-generator.use_column_types') ? ' (' . $typeName . ')' : '';
+                        $output .= "- `" . $name . "`" . $columnType . "\n";
                     }
                     $output .= "\n";
                 }
             }
         }
-        
+
         // Then list all relationships
         $output .= "## Relationships\n\n";
-        
+
         foreach ($models as $model) {
             /** @var Model $model */
             if (count($model->getRelations()) > 0) {
                 $output .= "### " . $model->getLabel() . " Relationships\n\n";
-                
+
                 foreach ($model->getRelations() as $relation) {
                     /** @var ModelRelation $relation */
                     // Find the related model by comparing model class names
                     $relatedModelClass = $relation->getModel();
+
                     $relatedModel = $models->first(function ($m) use ($relatedModelClass) {
                         return $m->getModel() === $relatedModelClass;
                     });
-                    
                     if ($relatedModel) {
-                        $output .= "- **" . $relation->getType() . "** `" . $relation->getName() . "` to " . 
-                                  $relatedModel->getLabel() . " (Local Key: `" . $relation->getLocalKey() . 
+                        $output .= "- **" . $relation->getType() . "** `" . $relation->getName() . "` to " .
+                                  $relatedModel->getLabel() . " (Local Key: `" . $relation->getLocalKey() .
                                   "`, Foreign Key: `" . $relation->getForeignKey() . "`)\n";
                     }
                 }
-                
+
                 $output .= "\n";
             }
         }
-        
+
         return $output;
     }
 
