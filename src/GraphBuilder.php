@@ -3,6 +3,7 @@
 namespace BeyondCode\ErdGenerator;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Schema;
 use phpDocumentor\GraphViz\Graph;
 use Illuminate\Support\Collection;
 use phpDocumentor\GraphViz\Node;
@@ -111,6 +112,11 @@ class GraphBuilder
         } catch (\Throwable $e) {
         }
 
+        try {
+            return Schema::getColumns($model->getTable());
+        } catch (\Throwable $e) {
+        }
+
         return [];
     }
 
@@ -123,11 +129,18 @@ class GraphBuilder
         if (config('erd-generator.use_db_schema')) {
             $columns = $this->getTableColumnsFromModel($model);
             foreach ($columns as $column) {
-                $label = $column->getName();
-                if (config('erd-generator.use_column_types')) {
-                    $label .= ' ('.$column->getType()->getName().')';
+                if (is_object($column)) {
+                    $name = $column->getName();
+                    $typeName = $column->getType()->getName();
+                } else { // it's an array!
+                    $name = $column['name'] ?? '';
+                    $typeName = $column['type_name'] ?? '';
                 }
-                $table .= '<tr width="100%"><td port="' . $column->getName() . '" align="left" width="100%"  bgcolor="'.config('erd-generator.table.row_background_color').'"><font color="'.config('erd-generator.table.row_font_color').'" >' . $label . '</font></td></tr>' . PHP_EOL;
+                $label = $name;
+                if (config('erd-generator.use_column_types')) {
+                    $label .= ' ('. $typeName .')';
+                }
+                $table .= '<tr width="100%"><td port="' . $name . '" align="left" width="100%"  bgcolor="'.config('erd-generator.table.row_background_color').'"><font color="'.config('erd-generator.table.row_font_color').'" >' . $label . '</font></td></tr>' . PHP_EOL;
             }
         }
 
