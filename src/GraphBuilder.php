@@ -3,6 +3,7 @@
 namespace BeyondCode\ErdGenerator;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Schema;
 use phpDocumentor\GraphViz\Graph;
 use Illuminate\Support\Collection;
 use phpDocumentor\GraphViz\Node;
@@ -30,6 +31,75 @@ class GraphBuilder
         return $this->graph;
     }
 
+    /**
+     * Generate a structured text representation of the ER diagram
+     *
+     * @param Collection $models
+     * @return string
+     */
+    public function generateStructuredTextRepresentation(Collection $models) : string
+    {
+        $output = "# Entity Relationship Diagram\n\n";
+
+        // First list all models/entities with their attributes
+        $output .= "## Entities\n\n";
+
+        foreach ($models as $model) {
+            /** @var Model $model */
+            $eloquentModel = app($model->getModel());
+            $output .= "### " . $model->getLabel() . " (`" . $model->getModel() . "`)\n\n";
+
+            // Add table columns if available
+            if (config('erd-generator.use_db_schema')) {
+                $columns = $this->getTableColumnsFromModel($eloquentModel);
+                if (count($columns) > 0) {
+                    $output .= "#### Attributes:\n\n";
+                    foreach ($columns as $column) {
+                        if (is_object($column)) {
+                            $name = $column->getName();
+                            $typeName = $column->getType()->getName();
+                        } else {
+                            $name = $column['name'] ?? '';
+                            $typeName = $column['type_name'] ?? '';
+                        }
+                        $columnType = config('erd-generator.use_column_types') ? ' (' . $typeName . ')' : '';
+                        $output .= "- `" . $name . "`" . $columnType . "\n";
+                    }
+                    $output .= "\n";
+                }
+            }
+        }
+
+        // Then list all relationships
+        $output .= "## Relationships\n\n";
+
+        foreach ($models as $model) {
+            /** @var Model $model */
+            if (count($model->getRelations()) > 0) {
+                $output .= "### " . $model->getLabel() . " Relationships\n\n";
+
+                foreach ($model->getRelations() as $relation) {
+                    /** @var ModelRelation $relation */
+                    // Find the related model by comparing model class names
+                    $relatedModelClass = $relation->getModel();
+
+                    $relatedModel = $models->first(function ($m) use ($relatedModelClass) {
+                        return $m->getModel() === $relatedModelClass;
+                    });
+                    if ($relatedModel) {
+                        $output .= "- **" . $relation->getType() . "** `" . $relation->getName() . "` to " .
+                                  $relatedModel->getLabel() . " (Local Key: `" . $relation->getLocalKey() .
+                                  "`, Foreign Key: `" . $relation->getForeignKey() . "`)\n";
+                    }
+                }
+
+                $output .= "\n";
+            }
+        }
+
+        return $output;
+    }
+
     protected function getTableColumnsFromModel(EloquentModel $model)
     {
         try {
@@ -49,6 +119,11 @@ class GraphBuilder
         } catch (\Throwable $e) {
         }
 
+        try {
+            return Schema::getColumns($model->getTable());
+        } catch (\Throwable $e) {
+        }
+
         return [];
     }
 
@@ -61,11 +136,18 @@ class GraphBuilder
         if (config('erd-generator.use_db_schema')) {
             $columns = $this->getTableColumnsFromModel($model);
             foreach ($columns as $column) {
-                $label = $column->getName();
-                if (config('erd-generator.use_column_types')) {
-                    $label .= ' ('.$column->getType()->getName().')';
+                if (is_object($column)) {
+                    $name = $column->getName();
+                    $typeName = $column->getType()->getName();
+                } else { // it's an array!
+                    $name = $column['name'] ?? '';
+                    $typeName = $column['type_name'] ?? '';
                 }
-                $table .= '<tr width="100%"><td port="' . $column->getName() . '" align="left" width="100%"  bgcolor="'.config('erd-generator.table.row_background_color').'"><font color="'.config('erd-generator.table.row_font_color').'" >' . $label . '</font></td></tr>' . PHP_EOL;
+                $label = $name;
+                if (config('erd-generator.use_column_types')) {
+                    $label .= ' ('. $typeName .')';
+                }
+                $table .= '<tr width="100%"><td port="' . $name . '" align="left" width="100%"  bgcolor="'.config('erd-generator.table.row_background_color').'"><font color="'.config('erd-generator.table.row_font_color').'" >' . $label . '</font></td></tr>' . PHP_EOL;
             }
         }
 
