@@ -55,13 +55,10 @@ class GraphBuilder
                 if (count($columns) > 0) {
                     $output .= "#### Attributes:\n\n";
                     foreach ($columns as $column) {
-                        if (is_object($column)) {
-                            $name = $column->getName();
-                            $typeName = $column->getType()->getName();
-                        } else {
-                            $name = $column['name'] ?? '';
-                            $typeName = $column['type_name'] ?? '';
-                        }
+
+                        $name = isset($column['name']) ? $column['name'] : '';
+                        $typeName = isset($column['type_name']) ? $column['type_name'] : '';
+
                         $columnType = config('erd-generator.use_column_types') ? ' (' . $typeName . ')' : '';
                         $output .= "- `" . $name . "`" . $columnType . "\n";
                     }
