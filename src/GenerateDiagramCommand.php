@@ -19,7 +19,7 @@ class GenerateDiagramCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'generate:erd {filename?} {--format=png}';
+    protected $signature = 'generate:erd {filename?} {--format=png} {--text-output : Output as text file instead of image}';
 
     /**
      * The console command description.
@@ -72,21 +72,50 @@ class GenerateDiagramCommand extends Command
 
         $graph = $this->graphBuilder->buildGraph($models);
 
-        if ($this->option('format') === self::FORMAT_TEXT) {
-            $this->info($graph->__toString());
+        // First check for text-output option
+        if ($this->option('text-output') || $this->option('format') === self::FORMAT_TEXT) {
+            $textOutput = $graph->__toString();
+            
+            // If text-output option is set, write to file
+            if ($this->option('text-output')) {
+                $outputFileName = $this->getTextOutputFileName();
+                file_put_contents($outputFileName, $textOutput);
+                $this->info(PHP_EOL);
+                $this->info('Wrote text diagram to ' . $outputFileName);
+                return;
+            }
+            
+            // Otherwise just output to console
+            $this->info($textOutput);
             return;
         }
 
-        $graph->export($this->option('format'), $this->getOutputFileName());
+        // Then check for .txt extension in filename
+        $outputFileName = $this->getOutputFileName();
+        if (pathinfo($outputFileName, PATHINFO_EXTENSION) === 'txt') {
+            // Generate structured text output for .txt files
+            $textOutput = $this->graphBuilder->generateStructuredTextRepresentation($models);
+            file_put_contents($outputFileName, $textOutput);
+            $this->info(PHP_EOL);
+            $this->info('Wrote structured ER diagram to ' . $outputFileName);
+            return;
+        }
+
+        $graph->export($this->option('format'), $outputFileName);
 
         $this->info(PHP_EOL);
-        $this->info('Wrote diagram to ' . $this->getOutputFileName());
+        $this->info('Wrote diagram to ' . $outputFileName);
     }
 
     protected function getOutputFileName(): string
     {
         return $this->argument('filename') ?:
             static::DEFAULT_FILENAME . '.' . $this->option('format');
+    }
+
+    protected function getTextOutputFileName(): string
+    {
+        return $this->argument('filename') ?: static::DEFAULT_FILENAME . '.txt';
     }
 
     protected function getModelsThatShouldBeInspected(): Collection
