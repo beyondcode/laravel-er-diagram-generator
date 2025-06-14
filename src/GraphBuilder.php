@@ -3,7 +3,6 @@
 namespace BeyondCode\ErdGenerator;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Facades\Schema;
 use phpDocumentor\GraphViz\Graph;
 use Illuminate\Support\Collection;
 use phpDocumentor\GraphViz\Node;
