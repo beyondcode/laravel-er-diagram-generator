@@ -121,11 +121,6 @@ class GraphBuilder
         } catch (\Throwable $e) {
         }
 
-        try {
-            return Schema::getColumns($model->getTable());
-        } catch (\Throwable $e) {
-        }
-
         return [];
     }
 
