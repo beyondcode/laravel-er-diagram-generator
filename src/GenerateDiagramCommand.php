@@ -55,17 +55,18 @@ class GenerateDiagramCommand extends Command
     public function handle()
     {
         $models = $this->getModelsThatShouldBeInspected();
+        $aliases = array_filter(config('erd-generator.aliases', []), 'is_string');
 
         $this->info("Found {$models->count()} models.");
         $this->info("Inspecting model relations.");
 
         $bar = $this->output->createProgressBar($models->count());
 
-        $models->transform(function ($model) use ($bar) {
+        $models->transform(function ($model) use ($bar, $aliases) {
             $bar->advance();
             return new GraphModel(
                 $model,
-                (new ReflectionClass($model))->getShortName(),
+                $aliases[$model] ?? (new ReflectionClass($model))->getShortName(),
                 $this->relationFinder->getModelRelations($model)
             );
         });
