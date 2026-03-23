@@ -3,11 +3,11 @@
 namespace BeyondCode\ErdGenerator;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Facades\Schema;
 use phpDocumentor\GraphViz\Graph;
 use Illuminate\Support\Collection;
 use phpDocumentor\GraphViz\Node;
 use \Illuminate\Database\Eloquent\Model as EloquentModel;
+use Illuminate\Support\Facades\Schema;
 
 class GraphBuilder
 {
@@ -55,13 +55,10 @@ class GraphBuilder
                 if (count($columns) > 0) {
                     $output .= "#### Attributes:\n\n";
                     foreach ($columns as $column) {
-                        if (is_object($column)) {
-                            $name = $column->getName();
-                            $typeName = $column->getType()->getName();
-                        } else {
-                            $name = $column['name'] ?? '';
-                            $typeName = $column['type_name'] ?? '';
-                        }
+
+                        $name = isset($column['name']) ? $column['name'] : '';
+                        $typeName = isset($column['type_name']) ? $column['type_name'] : '';
+
                         $columnType = config('erd-generator.use_column_types') ? ' (' . $typeName . ')' : '';
                         $output .= "- `" . $name . "`" . $columnType . "\n";
                     }
@@ -104,23 +101,19 @@ class GraphBuilder
     {
         try {
 
-            $table = $model->getConnection()->getTablePrefix() . $model->getTable();
-            $schema = $model->getConnection()->getDoctrineSchemaManager($table);
-            $databasePlatform = $schema->getDatabasePlatform();
-            $databasePlatform->registerDoctrineTypeMapping('enum', 'string');
-
-            $database = null;
-
-            if (strpos($table, '.')) {
-                list($database, $table) = explode('.', $table);
+            $table = $model->getTable();
+            $columns = Schema::getColumns($table);
+            if (config('erd-generator.ignore_columns')) {
+                $columns = collect($columns)->filter(function($column) use($table) {
+                    if (isset($column['name'])){
+                        return !in_array($table.'.'.$column['name'],config('erd-generator.ignore_columns'));
+                    }
+                    return false;
+                });
             }
 
-            return $schema->listTableColumns($table, $database);
-        } catch (\Throwable $e) {
-        }
+            return $columns;
 
-        try {
-            return Schema::getColumns($model->getTable());
         } catch (\Throwable $e) {
         }
 
@@ -136,18 +129,15 @@ class GraphBuilder
         if (config('erd-generator.use_db_schema')) {
             $columns = $this->getTableColumnsFromModel($model);
             foreach ($columns as $column) {
-                if (is_object($column)) {
-                    $name = $column->getName();
-                    $typeName = $column->getType()->getName();
-                } else { // it's an array!
-                    $name = $column['name'] ?? '';
-                    $typeName = $column['type_name'] ?? '';
+
+                if (isset($column['name'])) {
+                    $label = $column['name'];
+                    if (config('erd-generator.use_column_types') && isset($column['type'])) {
+                        $label .= ' ('.$column['type'].')';
+                    }
+                    $table .= '<tr width="100%"><td port="' . $column['name'] . '" align="left" width="100%"  bgcolor="'.config('erd-generator.table.row_background_color').'"><font color="'.config('erd-generator.table.row_font_color').'" >' . $label . '</font></td></tr>' . PHP_EOL;
                 }
-                $label = $name;
-                if (config('erd-generator.use_column_types')) {
-                    $label .= ' ('. $typeName .')';
-                }
-                $table .= '<tr width="100%"><td port="' . $name . '" align="left" width="100%"  bgcolor="'.config('erd-generator.table.row_background_color').'"><font color="'.config('erd-generator.table.row_font_color').'" >' . $label . '</font></td></tr>' . PHP_EOL;
+
             }
         }
 

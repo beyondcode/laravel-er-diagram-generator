@@ -51,6 +51,23 @@ class GenerationTest extends TestCase
     }
 
     #[Test]
+    public function it_generated_graphviz_for_test_models_with_db_columns_with_some_excluded_on_config()
+    {
+        $this->app['config']->set('erd-generator.use_column_types', false);
+        $this->app['config']->set('erd-generator.directories', [__DIR__ . '/Models']);
+        $this->app['config']->set('erd-generator.ignore_columns', [
+            'users.email',
+            'posts.body'
+        ]);
+
+        Artisan::call('generate:erd', [
+            '--format' => 'text'
+        ]);
+
+        $this->assertMatchesSnapshot(Artisan::output());
+    }
+
+    #[Test]
     public function it_generated_graphviz_for_test_models_with_aliases()
     {
         $this->app['config']->set('erd-generator.directories', [__DIR__ . '/Models']);
