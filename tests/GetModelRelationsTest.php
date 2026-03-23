@@ -9,12 +9,13 @@ use BeyondCode\ErdGenerator\Tests\Models\Comment;
 use BeyondCode\ErdGenerator\Tests\Models\Post;
 use BeyondCode\ErdGenerator\Tests\Models\User;
 use Illuminate\Support\Arr;
+use PHPUnit\Framework\Attributes\Test;
 
 
 class GetModelRelationsTest extends TestCase
 {
 
-    /** @test */
+    #[Test]
     public function it_can_find_model_relations()
     {
         $finder = new RelationFinder();
@@ -51,7 +52,7 @@ class GetModelRelationsTest extends TestCase
         $this->assertSame(null, $avatar->getForeignKey());
     }
 
-    /** @test */
+    #[Test]
     public function it_will_ignore_a_relation_if_it_is_excluded_on_config()
     {
         $this->app['config']->set('erd-generator.ignore', [

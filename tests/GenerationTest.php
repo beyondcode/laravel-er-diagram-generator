@@ -2,14 +2,17 @@
 
 namespace BeyondCode\ErdGenerator\Tests;
 
+use BeyondCode\ErdGenerator\Tests\Models\Avatar;
+use BeyondCode\ErdGenerator\Tests\Models\User;
 use Spatie\Snapshots\MatchesSnapshots;
 use Illuminate\Support\Facades\Artisan;
+use PHPUnit\Framework\Attributes\Test;
 
 class GenerationTest extends TestCase
 {
     use MatchesSnapshots;
 
-    /** @test */
+    #[Test]
     public function it_generated_graphviz_for_test_models()
     {
         $this->app['config']->set('erd-generator.use_db_schema', false);
@@ -22,7 +25,7 @@ class GenerationTest extends TestCase
         $this->assertMatchesSnapshot(Artisan::output());
     }
 
-    /** @test */
+    #[Test]
     public function it_generated_graphviz_for_test_models_with_db_columns_and_types()
     {
         $this->app['config']->set('erd-generator.directories', [__DIR__ . '/Models']);
@@ -34,7 +37,7 @@ class GenerationTest extends TestCase
         $this->assertMatchesSnapshot(Artisan::output());
     }
 
-    /** @test */
+    #[Test]
     public function it_generated_graphviz_for_test_models_with_db_columns()
     {
         $this->app['config']->set('erd-generator.use_column_types', false);
@@ -47,7 +50,7 @@ class GenerationTest extends TestCase
         $this->assertMatchesSnapshot(Artisan::output());
     }
 
-    /** @test */
+    #[Test]
     public function it_generated_graphviz_for_test_models_with_db_columns_with_some_excluded_on_config()
     {
         $this->app['config']->set('erd-generator.use_column_types', false);
@@ -64,7 +67,31 @@ class GenerationTest extends TestCase
         $this->assertMatchesSnapshot(Artisan::output());
     }
 
-    /** @test */
+    #[Test]
+    public function it_generated_graphviz_for_test_models_with_aliases()
+    {
+        $this->app['config']->set('erd-generator.directories', [__DIR__ . '/Models']);
+        $this->app['config']->set('erd-generator.aliases', [
+            Avatar::class => 123,
+            User::class => 'CustomUser'
+        ]);
+
+        Artisan::call('generate:erd', [
+            '--format' => 'text'
+        ]);
+
+        $output = Artisan::output();
+
+        $this->assertStringContainsString('>CustomUser<', $output);
+
+        // Avatar class must not be renamed, as the alias was not a string
+        $this->assertStringContainsString('>Avatar<', $output);
+
+        // Comment class must not be renamed, as it was not included in the aliases array
+        $this->assertStringContainsString('>Comment<', $output);
+    }
+
+    #[Test]
     public function it_generated_graphviz_in_jpeg_format()
     {
         $this->app['config']->set('erd-generator.directories', [__DIR__ . '/Models']);
@@ -76,7 +103,7 @@ class GenerationTest extends TestCase
         $this->assertStringContainsString('Wrote diagram to graph.jpeg', Artisan::output());
     }
 
-    /** @test */
+    #[Test]
     public function it_generates_text_output_file_with_text_output_option()
     {
         $this->app['config']->set('erd-generator.directories', [__DIR__ . '/Models']);
@@ -106,7 +133,7 @@ class GenerationTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function it_generates_structured_text_output_for_txt_extension()
     {
         $this->app['config']->set('erd-generator.directories', [__DIR__ . '/Models']);
@@ -137,7 +164,7 @@ class GenerationTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function it_generates_structured_text_output_with_correct_content()
     {
         $this->app['config']->set('erd-generator.directories', [__DIR__ . '/Models']);

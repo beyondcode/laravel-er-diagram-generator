@@ -36,6 +36,14 @@ return [
     ],
 
     /*
+     * If you want to rename models in the generated diagram, you can specify aliases
+     * for them here.
+     */
+    'aliases' => [
+        // User::class => 'CustomUser',
+    ],
+
+    /*
      * If true, all directories specified will be scanned recursively for models.
      * Set this to false if you prefer to explicitly define each directory that should
      * be scanned for models.
