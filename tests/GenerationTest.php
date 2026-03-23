@@ -2,6 +2,8 @@
 
 namespace BeyondCode\ErdGenerator\Tests;
 
+use BeyondCode\ErdGenerator\Tests\Models\Avatar;
+use BeyondCode\ErdGenerator\Tests\Models\User;
 use Spatie\Snapshots\MatchesSnapshots;
 use Illuminate\Support\Facades\Artisan;
 
@@ -45,6 +47,30 @@ class GenerationTest extends TestCase
         ]);
 
         $this->assertMatchesSnapshot(Artisan::output());
+    }
+
+    /** @test */
+    public function it_generated_graphviz_for_test_models_with_aliases()
+    {
+        $this->app['config']->set('erd-generator.directories', [__DIR__ . '/Models']);
+        $this->app['config']->set('erd-generator.aliases', [
+            Avatar::class => 123,
+            User::class => 'CustomUser'
+        ]);
+
+        Artisan::call('generate:erd', [
+            '--format' => 'text'
+        ]);
+
+        $output = Artisan::output();
+
+        $this->assertStringContainsString('>CustomUser<', $output);
+
+        // Avatar class must not be renamed, as the alias was not a string
+        $this->assertStringContainsString('>Avatar<', $output);
+
+        // Comment class must not be renamed, as it was not included in the aliases array
+        $this->assertStringContainsString('>Comment<', $output);
     }
 
     /** @test */
