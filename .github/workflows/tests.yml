@@ -58,8 +58,8 @@ jobs:
           composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
           composer require "orchestra/testbench:${{ matrix.testbench }}" --dev --no-interaction --no-update
           if [[ "${{ matrix.laravel }}" == "10.*" ]]; then composer require "doctrine/dbal:^3.3" --no-interaction --no-update; fi
-          if [[ "${{ matrix.laravel }}" == "13.*" ]]; then STABILITY="--prefer-stable --minimum-stability=dev"; fi
-          composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction $STABILITY
+          if [[ "${{ matrix.laravel }}" == "13.*" ]]; then composer config minimum-stability dev; fi
+          composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
 
       - name: Execute tests
         run: vendor/bin/phpunit
