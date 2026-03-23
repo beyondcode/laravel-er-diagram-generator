@@ -7,11 +7,12 @@ use BeyondCode\ErdGenerator\Tests\Models\Avatar;
 use BeyondCode\ErdGenerator\Tests\Models\Comment;
 use BeyondCode\ErdGenerator\Tests\Models\Post;
 use BeyondCode\ErdGenerator\Tests\Models\User;
+use PHPUnit\Framework\Attributes\Test;
 
 class FindModelsFromConfigTest extends TestCase
 {
 
-    /** @test */
+    #[Test]
     public function it_can_find_class_names_from_directory()
     {
         $finder = new ModelFinder(app()->make('files'));
@@ -26,7 +27,7 @@ class FindModelsFromConfigTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_will_ignore_a_model_if_it_is_excluded_on_config()
     {
         $this->app['config']->set('erd-generator.ignore', [
@@ -47,7 +48,7 @@ class FindModelsFromConfigTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_will_only_return_models_in_whitelist_if_present()
     {
         $this->app['config']->set('erd-generator.whitelist', [

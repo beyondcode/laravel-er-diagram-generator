@@ -7,6 +7,7 @@ on:
       - dev
   pull_request:
     branches:
+      - dev
       - master
 
 jobs:
@@ -17,13 +18,15 @@ jobs:
       fail-fast: true
       matrix:
         php: ['8.4', '8.3', '8.2']
-        laravel: ['10.*', '11.*', '12.*']
+        laravel: ['10.*', '11.*', '12.*', '13.*']
         dependency-version: [prefer-stable]
         exclude:
           - php: 8.4
             laravel: 10.*
           - php: 8.4
             laravel: 11.*
+          - laravel: 13.*
+            php: '8.2'
         include:
           - laravel: 10.*
             testbench: 8.*
@@ -31,6 +34,8 @@ jobs:
             testbench: 9.*
           - laravel: 12.*
             testbench: 10.*
+          - laravel: 13.*
+            testbench: 11.*
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }} - ubuntu-latest
 
@@ -50,9 +55,11 @@ jobs:
 
       - name: Install dependencies
         run: |
-            composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
-            if [[ "${{ matrix.laravel }}" == "10.*" ]]; then composer require "doctrine/dbal:^3.3" --no-interaction --no-update; fi
-            composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
+          composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
+          composer require "orchestra/testbench:${{ matrix.testbench }}" --dev --no-interaction --no-update
+          if [[ "${{ matrix.laravel }}" == "10.*" ]]; then composer require "doctrine/dbal:^3.3" --no-interaction --no-update; fi
+          if [[ "${{ matrix.laravel }}" == "13.*" ]]; then composer config minimum-stability dev; fi
+          composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
 
       - name: Execute tests
         run: vendor/bin/phpunit
