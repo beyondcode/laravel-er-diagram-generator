@@ -9,6 +9,7 @@ use Illuminate\Support\Collection;
 use ReflectionClass;
 use ReflectionMethod;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 
 
 class RelationFinder
@@ -95,7 +96,9 @@ class RelationFinder
                     )
                 ];
             }
-        } catch (\Throwable $e) {}
+        } catch (\Throwable $e) {
+            Log::debug("Could not analyze method {$method->getName()} on {$model}: {$e->getMessage()}");
+        }
         return null;
     }
 
