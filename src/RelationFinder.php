@@ -31,7 +31,7 @@ class RelationFinder
         $methods = Collection::make($class->getMethods(ReflectionMethod::IS_PUBLIC))
             ->merge($traitMethods)
             ->reject(function (ReflectionMethod $method) use ($model) {
-                return $method->class !== $model || $method->getNumberOfParameters() > 0 || $method->isStatic();;
+                return $method->class !== $model || $method->getNumberOfParameters() > 0 || $method->isStatic();
             });
 
         $relations = Collection::make();
