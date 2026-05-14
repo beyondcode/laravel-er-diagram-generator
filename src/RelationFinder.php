@@ -9,6 +9,7 @@ use Illuminate\Support\Collection;
 use ReflectionClass;
 use ReflectionMethod;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 
 
 class RelationFinder
@@ -31,7 +32,7 @@ class RelationFinder
         $methods = Collection::make($class->getMethods(ReflectionMethod::IS_PUBLIC))
             ->merge($traitMethods)
             ->reject(function (ReflectionMethod $method) use ($model) {
-                return $method->class !== $model || $method->getNumberOfParameters() > 0 || $method->isStatic();;
+                return $method->class !== $model || $method->getNumberOfParameters() > 0 || $method->isStatic();
             });
 
         $relations = Collection::make();
@@ -95,7 +96,9 @@ class RelationFinder
                     )
                 ];
             }
-        } catch (\Throwable $e) {}
+        } catch (\Throwable $e) {
+            Log::debug("Could not analyze method {$method->getName()} on {$model}: {$e->getMessage()}");
+        }
         return null;
     }
 
