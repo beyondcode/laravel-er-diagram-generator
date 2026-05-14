@@ -7,14 +7,14 @@ use BeyondCode\ErdGenerator\RelationFinder;
 use BeyondCode\ErdGenerator\Tests\Models\Avatar;
 use BeyondCode\ErdGenerator\Tests\Models\Comment;
 use BeyondCode\ErdGenerator\Tests\Models\Post;
+use BeyondCode\ErdGenerator\Tests\Fixtures\ModelWithThrowingMethod;
 use BeyondCode\ErdGenerator\Tests\Models\User;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 use PHPUnit\Framework\Attributes\Test;
-
 
 class GetModelRelationsTest extends TestCase
 {
-
     #[Test]
     public function it_can_find_model_relations()
     {
@@ -67,6 +67,26 @@ class GetModelRelationsTest extends TestCase
 
         $this->assertCount(2, $relations);
         $this->assertNull(Arr::get($relations, 'posts'));
+    }
+
+    #[Test]
+    public function it_logs_debug_when_method_throws_exception()
+    {
+        Log::spy();
+
+        $finder = new RelationFinder();
+
+        $relations = $finder->getModelRelations(ModelWithThrowingMethod::class);
+
+        $this->assertCount(0, $relations);
+
+        Log::shouldHaveReceived('debug')
+            ->withArgs(function (string $message) {
+                return str_contains($message, 'Could not analyze method')
+                    && str_contains($message, 'throwingMethod')
+                    && str_contains($message, 'Something went wrong');
+            })
+            ->once();
     }
 
 }
